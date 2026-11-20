@@ -28,6 +28,8 @@ _MENSAGENS_VALIDACAO: dict[str, str] = {
     "missing": "Campo obrigatório.",
     "string_too_short": "Deve ter pelo menos {min_length} caracteres.",
     "string_too_long": "Deve ter no máximo {max_length} caracteres.",
+    "too_short": "Deve conter no mínimo {min_length} item(ns).",
+    "too_long": "Deve conter no máximo {max_length} item(ns).",
     "string_type": "Deve ser um texto.",
     "string_pattern_mismatch": "Formato inválido.",
     "greater_than": "Deve ser maior que {gt}.",
@@ -64,12 +66,15 @@ def _mensagem_validacao(erro: dict) -> str:
 
     template = _MENSAGENS_VALIDACAO.get(tipo)
     if template is None:
-        return str(mensagem)
+        # Nenhum texto do validador pode vazar para o contrato; o campo em
+        # `details` já indica onde corrigir.
+        return "Valor inválido."
 
     try:
         return template.format(**ctx)
     except (KeyError, IndexError):
         return template
+
 
 _HTTP_PADRAO: dict[int, tuple[str, str]] = {
     400: ("REQUISICAO_INVALIDA", "A requisição não pôde ser interpretada."),
@@ -122,7 +127,10 @@ async def handle_validation_error(request: Request, exc: RequestValidationError)
     detalhes = []
     for erro in exc.errors():
         local = ".".join(str(parte) for parte in erro.get("loc", []) if parte not in _LOCAIS_IGNORADOS)
-        detalhes.append({"field": local or "body", "issue": _mensagem_validacao(erro)})
+        # JSON malformado chega com a posição do parser na loc; o campo é o corpo.
+        if not local or local.isdigit():
+            local = "body"
+        detalhes.append({"field": local, "issue": _mensagem_validacao(erro)})
     return resposta_erro(
         request,
         status_code=422,
