@@ -30,6 +30,24 @@ class CredenciaisInvalidasError(DomainError):
     mensagem = "E-mail ou senha inválidos."
 
 
+class NaoAutenticadoError(DomainError):
+    codigo = "NAO_AUTENTICADO"
+    status_code = 401
+    mensagem = "Autenticação necessária. Envie um token Bearer válido."
+
+
+class TokenInvalidoError(DomainError):
+    codigo = "TOKEN_INVALIDO"
+    status_code = 401
+    mensagem = "Token de acesso inválido."
+
+
+class TokenExpiradoError(DomainError):
+    codigo = "TOKEN_EXPIRADO"
+    status_code = 401
+    mensagem = "Token expirado. Faça login novamente."
+
+
 class SemPermissaoError(DomainError):
     codigo = "SEM_PERMISSAO"
     status_code = 403
