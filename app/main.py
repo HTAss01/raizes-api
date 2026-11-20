@@ -4,11 +4,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
+from app.api.errors import registrar_handlers
+from app.api.middleware import RequestIdMiddleware
+from app.api.routers import auth, produtos, unidades
 from app.config import settings
 from app.infrastructure.db.session import engine
 
 TAGS_METADATA = [
     {"name": "Saúde", "description": "Verificação de disponibilidade da API e do banco."},
+    {
+        "name": "Autenticação",
+        "description": "Login, renovação e revogação de tokens, dados do usuário autenticado.",
+    },
+    {
+        "name": "Unidades",
+        "description": "Unidades da rede, cardápio por unidade e estoque operacional.",
+    },
+    {"name": "Produtos", "description": "Catálogo de produtos da rede (CRUD com exclusão lógica)."},
 ]
 
 
@@ -34,6 +46,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -41,6 +54,12 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    registrar_handlers(app)
+
+    app.include_router(auth.router)
+    app.include_router(unidades.router)
+    app.include_router(produtos.router)
 
     @app.get("/health", tags=["Saúde"], summary="Verifica API e conexão com o banco")
     def health() -> dict:
