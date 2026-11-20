@@ -46,17 +46,86 @@ Organização em camadas, com separação clara de responsabilidades:
 
 ```
 app/
-├── domain/          # Entidades, regras de negócio e validações
-├── application/     # Casos de uso e orquestração dos fluxos
-├── infrastructure/  # Modelos SQLAlchemy, repositórios, pagamento mock, logs
-└── api/             # Routers, schemas Pydantic, dependências de auth
+├── domain/                  # Núcleo: não conhece FastAPI nem SQLAlchemy
+│   ├── enums.py             # Perfis, canais, status, tipos de movimentação
+│   ├── exceptions.py        # Exceções de negócio com código e status HTTP
+│   └── rules/               # Regras puras (testáveis sem banco)
+│       ├── status_pedido.py # Máquina de estados + matriz de permissões
+│       ├── estoque.py       # Disponibilidade = quantidade - reservada
+│       └── fidelidade.py    # Pontuação e resgate
+├── application/             # Casos de uso (orquestração de transações)
+├── infrastructure/          # Detalhes técnicos substituíveis
+│   ├── db/
+│   │   ├── base.py          # Base declarativa + convenção de constraints
+│   │   ├── session.py       # Engine, sessão e dependência get_db
+│   │   ├── models.py        # 14 modelos ORM (DER)
+│   │   └── seed.py          # Dados iniciais idempotentes
+│   └── security/password.py # Hash bcrypt
+└── api/                     # Routers, schemas Pydantic e dependências
 ```
 
-_Detalhamento e diagramas em construção._
+Dependência aponta sempre para dentro: `api → application → domain`,
+`infrastructure` implementa o que o domínio/aplicação precisam.
 
 ## Como executar
 
-_Em construção._
+Pré-requisitos: **Python 3.11+** (testado em 3.12) e Git. Não precisa de Docker:
+o banco padrão é SQLite.
+
+```bash
+# 1. Clonar
+git clone git@github.com:HTAss01/raizes-api.git
+cd raizes-api
+
+# 2. Ambiente virtual
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux/macOS
+source .venv/bin/activate
+
+# 3. Dependências
+pip install -r requirements.txt
+
+# 4. Variáveis de ambiente
+cp .env.example .env      # Windows: copy .env.example .env
+
+# 5. Banco + migrations
+alembic upgrade head
+
+# 6. Dados iniciais
+python -m app.infrastructure.db.seed
+
+# 7. Subir a API
+uvicorn app.main:app --reload --port 8000
+```
+
+Acesse:
+- Swagger UI: http://localhost:8000/docs
+- OpenAPI JSON: http://localhost:8000/openapi.json
+- Health check: http://localhost:8000/health
+
+### Credenciais do seed
+
+Todos os usuários usam a senha `Senha@123`.
+
+| Perfil | E-mail |
+|---|---|
+| ADMIN | admin@raizes.com.br |
+| GERENTE | gerente@raizes.com.br |
+| ATENDENTE | atendente@raizes.com.br |
+| COZINHA | cozinha@raizes.com.br |
+| CLIENTE | cliente@raizes.com.br |
+
+### PostgreSQL (opcional)
+
+Basta trocar uma linha no `.env` — nenhum código muda:
+
+```env
+DATABASE_URL=postgresql+psycopg://raizes:raizes@localhost:5432/raizes
+```
+
+Depois: `alembic upgrade head` e `python -m app.infrastructure.db.seed`.
 
 ## Documentação da API (Swagger)
 
