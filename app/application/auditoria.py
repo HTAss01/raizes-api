@@ -3,6 +3,7 @@
 O log é append-only: nunca é atualizado nem apagado pela aplicação.
 """
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.infrastructure.db.models import LogAuditoria
@@ -42,3 +43,29 @@ def registrar_auditoria(
     )
     db.add(log)
     return log
+
+
+def listar(
+    db: Session,
+    *,
+    offset: int,
+    limit: int,
+    acao: str | None = None,
+    entidade: str | None = None,
+    entidade_id: str | None = None,
+) -> tuple[list[LogAuditoria], int]:
+    stmt = select(LogAuditoria)
+    if acao:
+        stmt = stmt.where(LogAuditoria.acao == acao.upper())
+    if entidade:
+        stmt = stmt.where(LogAuditoria.entidade == entidade)
+    if entidade_id:
+        stmt = stmt.where(LogAuditoria.entidade_id == entidade_id)
+
+    total = db.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+    itens = list(
+        db.scalars(
+            stmt.order_by(LogAuditoria.id.desc()).offset(offset).limit(limit)
+        )
+    )
+    return itens, total
