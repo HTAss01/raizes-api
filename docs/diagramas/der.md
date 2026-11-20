@@ -1,6 +1,10 @@
 # DER — Diagrama Entidade-Relacionamento
 
-Modelo compatível com as migrations do Alembic (`migrations/versions/`).
+O modelo tem 14 tabelas. Para manter legibilidade, o DER está dividido em dois recortes:
+o **núcleo comercial** (pedido, cardápio, estoque e pagamento) e o **apoio operacional e
+governança** (movimentações, fidelidade, promoções, histórico, auditoria e sessões).
+
+## Núcleo comercial
 
 ```mermaid
 erDiagram
@@ -9,12 +13,10 @@ erDiagram
         string nome
         string email UK
         string senha_hash
-        enum perfil "ADMIN|GERENTE|ATENDENTE|COZINHA|CLIENTE"
-        string telefone
+        enum perfil
         bool ativo
         bool consentimento_lgpd
         datetime consentimento_em
-        datetime criado_em
     }
 
     UNIDADES {
@@ -51,29 +53,16 @@ erDiagram
         int estoque_minimo
     }
 
-    MOVIMENTACOES_ESTOQUE {
-        int id PK
-        int unidade_id FK
-        int produto_id FK
-        int pedido_id FK
-        int usuario_id FK
-        enum tipo "ENTRADA|SAIDA|RESERVA|LIBERACAO|BAIXA"
-        int quantidade
-        string motivo
-    }
-
     PEDIDOS {
         int id PK
         int cliente_id FK
         int unidade_id FK
-        enum canal_pedido "APP|TOTEM|BALCAO|PICKUP|WEB"
-        enum status "AGUARDANDO_PAGAMENTO|PAGO|EM_PREPARO|PRONTO|ENTREGUE|CANCELADO"
+        enum canal_pedido
+        enum status
         enum forma_pagamento
-        numeric subtotal_itens
         numeric desconto
         int pontos_resgatados
         numeric total
-        string observacao
     }
 
     PEDIDO_ITENS {
@@ -88,12 +77,52 @@ erDiagram
     PAGAMENTOS {
         int id PK
         int pedido_id FK
-        enum status "PENDENTE|APROVADO|RECUSADO"
+        enum status
         numeric valor
         string idempotency_key UK
         string transacao_externa_id
         string motivo_recusa
         json payload_resposta
+    }
+
+    USUARIOS ||--o{ PEDIDOS : "realiza"
+    UNIDADES ||--o{ PEDIDOS : "atende"
+    UNIDADES ||--o{ CARDAPIO_UNIDADE : "oferece"
+    PRODUTOS ||--o{ CARDAPIO_UNIDADE : "compoe"
+    UNIDADES ||--o{ ESTOQUES : "possui"
+    PRODUTOS ||--o{ ESTOQUES : "estocado"
+    PEDIDOS ||--|{ PEDIDO_ITENS : "contem"
+    PRODUTOS ||--o{ PEDIDO_ITENS : "vendido"
+    PEDIDOS ||--o{ PAGAMENTOS : "cobrado"
+```
+
+## Apoio operacional e governança
+
+```mermaid
+erDiagram
+    USUARIOS {
+        int id PK
+        string email UK
+        enum perfil
+    }
+
+    PEDIDOS {
+        int id PK
+        enum canal_pedido
+        enum status
+        numeric total
+    }
+
+    MOVIMENTACOES_ESTOQUE {
+        int id PK
+        int unidade_id FK
+        int produto_id FK
+        int pedido_id FK
+        int usuario_id FK
+        enum tipo
+        int quantidade
+        string motivo
+        datetime criado_em
     }
 
     PEDIDO_STATUS_HISTORICO {
@@ -103,13 +132,14 @@ erDiagram
         enum status_anterior
         enum status_novo
         string observacao
+        datetime criado_em
     }
 
     PONTOS_TRANSACOES {
         int id PK
         int cliente_id FK
         int pedido_id FK
-        enum tipo "CREDITO|DEBITO"
+        enum tipo
         int pontos
         string descricao
     }
@@ -119,7 +149,7 @@ erDiagram
         int unidade_id FK
         int produto_id FK
         string nome
-        enum tipo_desconto "PERCENTUAL|VALOR_FIXO"
+        enum tipo_desconto
         numeric valor
         datetime data_inicio
         datetime data_fim
@@ -147,32 +177,15 @@ erDiagram
         bool revogado
     }
 
-    USUARIOS ||--o{ PEDIDOS : "realiza"
-    USUARIOS ||--o{ PONTOS_TRANSACOES : "acumula"
-    USUARIOS ||--o{ REFRESH_TOKENS : "autentica"
-    USUARIOS ||--o{ AUDITORIA_LOGS : "gera"
-    USUARIOS ||--o{ MOVIMENTACOES_ESTOQUE : "lanca"
-
-    UNIDADES ||--o{ CARDAPIO_UNIDADE : "oferece"
-    PRODUTOS ||--o{ CARDAPIO_UNIDADE : "compoe"
-
-    UNIDADES ||--o{ ESTOQUES : "possui"
-    PRODUTOS ||--o{ ESTOQUES : "estocado"
-
-    UNIDADES ||--o{ PEDIDOS : "atende"
-    PEDIDOS ||--|{ PEDIDO_ITENS : "contem"
-    PRODUTOS ||--o{ PEDIDO_ITENS : "vendido"
-
-    PEDIDOS ||--o{ PAGAMENTOS : "cobrado"
+    PEDIDOS ||--o{ MOVIMENTACOES_ESTOQUE : "movimenta"
     PEDIDOS ||--o{ PEDIDO_STATUS_HISTORICO : "historico"
     PEDIDOS ||--o{ PONTOS_TRANSACOES : "origem"
-    PEDIDOS ||--o{ MOVIMENTACOES_ESTOQUE : "movimenta"
-
-    UNIDADES ||--o{ MOVIMENTACOES_ESTOQUE : "registra"
-    PRODUTOS ||--o{ MOVIMENTACOES_ESTOQUE : "movimenta"
-
-    UNIDADES ||--o{ PROMOCOES : "aplica"
-    PRODUTOS ||--o{ PROMOCOES : "aplica"
+    USUARIOS ||--o{ MOVIMENTACOES_ESTOQUE : "lanca"
+    USUARIOS ||--o{ PEDIDO_STATUS_HISTORICO : "executa"
+    USUARIOS ||--o{ PONTOS_TRANSACOES : "acumula"
+    USUARIOS ||--o{ AUDITORIA_LOGS : "gera"
+    USUARIOS ||--o{ REFRESH_TOKENS : "autentica"
+    USUARIOS ||--o{ PROMOCOES : "cria"
 ```
 
 ## Restrições relevantes

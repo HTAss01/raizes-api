@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Raizes do Nordeste - API multicanal</title>
+<style>
+/* Estilo de impressão inspirado nas normas ABNT para trabalho acadêmico. */
+
+@page {
+  size: A4;
+  margin: 3cm 2cm 2cm 3cm;
+}
+
+html {
+  font-family: "Times New Roman", "Liberation Serif", serif;
+  font-size: 12pt;
+  color: #000;
+}
+
+body {
+  margin: 0;
+  line-height: 1.5;
+  text-align: justify;
+  hyphens: auto;
+}
+
+p {
+  margin: 0 0 0.6em 0;
+  text-indent: 1.25cm;
+}
+
+h1 {
+  font-size: 12pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: left;
+  margin: 0 0 1.2em 0;
+  page-break-before: always;
+  page-break-after: avoid;
+}
+
+h2 {
+  font-size: 12pt;
+  font-weight: bold;
+  text-align: left;
+  margin: 1.4em 0 0.6em 0;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 12pt;
+  font-weight: normal;
+  font-style: italic;
+  text-align: left;
+  margin: 1.2em 0 0.5em 0;
+  page-break-after: avoid;
+}
+
+strong { font-weight: bold; }
+
+ul, ol {
+  margin: 0 0 0.8em 0;
+  padding-left: 1.5cm;
+}
+
+li { margin-bottom: 0.35em; text-align: justify; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  line-height: 1.25;
+  margin: 0.8em 0 1.2em 0;
+  page-break-inside: auto;
+}
+
+th, td {
+  border: 0.5pt solid #555;
+  padding: 3pt 4pt;
+  vertical-align: top;
+  text-align: left;
+}
+
+th {
+  background: #eeeeee;
+  font-weight: bold;
+}
+
+tr { page-break-inside: avoid; }
+
+code {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 9.5pt;
+  background: #f4f4f4;
+  padding: 0 2px;
+}
+
+pre {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 8.5pt;
+  line-height: 1.25;
+  background: #f7f7f7;
+  border: 0.5pt solid #ccc;
+  padding: 6pt 8pt;
+  margin: 0.6em 0 1em 0;
+  white-space: pre-wrap;
+  text-align: left;
+  page-break-inside: avoid;
+}
+
+pre code { background: none; padding: 0; }
+
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 21cm;
+  margin: 0.6em auto 0.3em auto;
+  page-break-inside: avoid;
+}
+
+.page-break {
+  page-break-after: always;
+}
+
+.esquerda {
+  text-align: left;
+  text-indent: 0;
+}
+
+.sumario {
+  text-align: left;
+  text-indent: 0;
+  line-height: 1.9;
+}
+
+/* ---------------- Capa ---------------- */
+
+.capa {
+  height: 24.5cm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.capa-instituicao {
+  font-size: 12pt;
+  font-weight: bold;
+  line-height: 1.6;
+  margin-top: 1.5cm;
+}
+
+.capa-titulo h1 {
+  page-break-before: avoid;
+  text-align: center;
+  font-size: 20pt;
+  margin: 0 0 0.6cm 0;
+  letter-spacing: 0.05em;
+}
+
+.capa-titulo h2 {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: normal;
+  margin: 0 auto;
+  max-width: 14cm;
+  line-height: 1.4;
+}
+
+.capa-autor {
+  font-size: 12pt;
+  line-height: 1.8;
+}
+
+.capa-rodape {
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 0.5cm;
+}
+
+</style>
+</head>
+<body>
+<div class="capa">
+  <div class="capa-instituicao">
+    <p>PROJETO MULTIDISCIPLINAR &mdash; ELETIVA IV</p>
+    <p>TRILHA BACK-END</p>
+  </div>
+  <div class="capa-titulo">
+    <h1>RA&Iacute;ZES DO NORDESTE</h1>
+    <h2>API REST multicanal para rede de lanchonetes: pedidos, estoque por unidade,
+        fideliza&ccedil;&atilde;o e pagamento desacoplado</h2>
+  </div>
+  <div class="capa-autor">
+    <p>AGATHA SANTANA SOUZA</p>
+    <p>RU: 4992316</p>
+    <p>Curso: ______________________________</p>
+    <p>Polo: ______________________________</p>
+  </div>
+  <div class="capa-rodape">
+    <p>2026</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<h1>RESUMO</h1>
+<p>Este trabalho apresenta o projeto e a implementação do back-end de uma solução multicanal para a rede
+de lanchonetes fictícia <strong>Raízes do Nordeste</strong>. O problema de negócio é a operação de uma franquia em
+expansão, que precisa atender o mesmo pedido por canais distintos — aplicativo, totem, balcão,
+pick-up e web — mantendo cardápio e estoque próprios de cada unidade e sem perder rastreabilidade.</p>
+<p>A solução foi construída em <strong>Python 3.12 com FastAPI</strong>, persistência em <strong>SQLAlchemy 2.0</strong> com
+migrações versionadas em <strong>Alembic</strong>, autenticação <strong>JWT</strong> com autorização por perfis, documentação
+<strong>OpenAPI</strong> gerada a partir do código e banco <strong>SQLite</strong> portável para PostgreSQL por configuração.
+A organização segue quatro camadas — <em>Domain</em>, <em>Application</em>, <em>Infrastructure</em> e <em>API</em> — com regras de
+negócio isoladas de framework e de banco de dados.</p>
+<p>O fluxo crítico entregue ponta a ponta é <strong>Pedido → Pagamento (mock) → Atualização de status</strong>:
+o pedido registra obrigatoriamente o canal de origem (<code>canalPedido</code>), reserva o estoque da unidade,
+tem o pagamento solicitado a um gateway simulado com chave de idempotência, e só então converte a
+reserva em baixa física, credita pontos de fidelidade e avança na máquina de estados. A recusa de
+pagamento libera a reserva e encerra o pedido de forma coerente.</p>
+<p>Foram implementadas 34 operações de API em 14 tabelas, com padrão único de erro, paginação em todas
+as listagens e mensagens de validação em português. A LGPD é tratada de forma técnica: consentimento
+registrado com data, minimização nas respostas, hash bcrypt de senha, log append-only de ações
+sensíveis, portabilidade dos dados do titular e anonimização na exclusão da conta. A validação é
+reproduzível por meio de uma coleção Postman com 59 requisições e 25 cenários documentados
+(8 positivos e 17 negativos), executada integralmente com sucesso em banco recém-semeado.</p>
+<p><strong>Palavras-chave:</strong> API REST; FastAPI; multicanalidade; estoque por unidade; pagamento simulado; LGPD.</p>
+<div class="page-break"></div>
+
+<h1>SUMÁRIO</h1>
+<p class="sumario">
+1. INTRODUÇÃO E OBJETIVOS<br>
+2. ANÁLISE E REQUISITOS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.1 Contexto do negócio<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.2 Requisitos funcionais<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.3 Requisitos não funcionais<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.4 Multicanalidade como requisito de domínio<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.5 Priorização: entregue, proposto e justificativas<br>
+3. MODELAGEM E ARQUITETURA<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.1 Diagrama de casos de uso<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.2 DER e modelo de dados<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.3 Arquitetura em camadas<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.4 Diagrama de classes e máquina de estados<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.5 Diagrama de sequência do fluxo crítico<br>
+4. API E ENDPOINTS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4.1 Organização por recurso<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4.2 Padrão de erro<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4.3 Contrato de pedido e o campo canalPedido<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4.4 Exemplos de requisição e resposta<br>
+&nbsp;&nbsp;&nbsp;&nbsp;4.5 Regras mínimas de contrato<br>
+5. LGPD, PRIVACIDADE E SEGURANÇA<br>
+6. ENTREGA TÉCNICA<br>
+7. PLANO DE TESTES<br>
+8. RESULTADOS OBTIDOS<br>
+9. CONCLUSÃO<br>
+REFERÊNCIAS<br>
+APÊNDICE A — Relação completa de endpoints<br>
+APÊNDICE B — Credenciais do seed<br>
+APÊNDICE C — Comandos de execução
+</p>
+
+<div class="page-break"></div>
+
+<h1>1 INTRODUÇÃO E OBJETIVOS</h1>
+<p>A <strong>Raízes do Nordeste</strong> é uma rede de lanchonetes de comida regional em expansão, com unidades em
+capitais e no interior. O crescimento trouxe um problema típico de franquia: cada loja tem
+disponibilidade própria de produtos e estoque próprio, mas o cliente espera a mesma experiência
+independentemente de onde pede. Além disso, o mesmo pedido pode nascer em canais diferentes — o
+aplicativo, o totem da loja, o balcão, o pick-up ou o site — e a operação precisa saber de onde ele
+veio para conseguir consolidar demanda por canal.</p>
+<p>O objetivo deste trabalho é projetar e implementar o <strong>back-end</strong> dessa solução, demonstrando
+domínio sobre levantamento e priorização de requisitos, modelagem de dados, definição de contratos
+de API, implementação de regras de negócio, segurança, conformidade com a LGPD e testabilidade.</p>
+<p>Os objetivos específicos são:</p>
+<ol>
+<li>traduzir o estudo de caso em requisitos funcionais e não funcionais priorizados;</li>
+<li>modelar o domínio e o banco em DER coerente com a implementação;</li>
+<li>organizar o código em camadas, separando regra de negócio de detalhe técnico;</li>
+<li>implementar uma API REST documentada via OpenAPI, com contrato e padrão de erro consistentes;</li>
+<li>fechar um fluxo crítico completo com persistência real e integração simulada de pagamento;</li>
+<li>aplicar controles mínimos de segurança e LGPD, com rastreabilidade por auditoria;</li>
+<li>entregar evidência reproduzível de funcionamento por meio de coleção de testes.</li>
+</ol>
+<p>O escopo escolhido — <strong>Fluxo A: Pedido → Pagamento mock → Atualização de status</strong> — é o recomendado
+pelo roteiro e é o que exercita o maior número de regras simultâneas: multicanalidade, consistência
+de estoque, idempotência, máquina de estados, autorização por perfil e fidelização.</p>
+<div class="page-break"></div>
+
+<h1>2 ANÁLISE E REQUISITOS</h1>
+<h2>2.1 Contexto do negócio</h2>
+<p>A rede opera com uma matriz (que define catálogo, preços de referência e campanhas) e unidades
+(que vendem, preparam e entregam). Disso decorrem três restrições estruturais que guiaram todo o
+modelo:</p>
+<ul>
+<li><strong>estoque é por unidade</strong>, não global: uma promoção pode esgotar em uma loja e continuar
+  disponível em outra;</li>
+<li><strong>preço é por unidade</strong>, ainda que derivado do preço base da matriz;</li>
+<li><strong>o canal de origem é dado de domínio</strong>, não um detalhe de interface: precisa ser gravado,
+  consultável e filtrável.</li>
+</ul>
+<h2>2.2 Requisitos funcionais</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito funcional</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF01</td>
+<td>Cadastro de usuário com e-mail único e consentimento LGPD</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF02</td>
+<td>Autenticação por e-mail e senha com emissão de token JWT e refresh rotativo</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF03</td>
+<td>Autorização por perfis: ADMIN, GERENTE, ATENDENTE, COZINHA, CLIENTE</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF04</td>
+<td>Cadastro e consulta de unidades da rede</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF05</td>
+<td>CRUD de produtos com desativação lógica</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF06</td>
+<td>Cardápio por unidade, com preço e disponibilidade próprios</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF07</td>
+<td>Controle de estoque por unidade, com entrada/saída e restrição de venda</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF08</td>
+<td>Criação de pedido multicanal com itens, valores e status inicial</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF09</td>
+<td>Registro obrigatório do canal do pedido (<code>canalPedido</code>) e filtro por canal</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF10</td>
+<td>Atualização de status com máquina de estados e permissão por perfil</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF11</td>
+<td>Cancelamento de pedido com devolução de reserva/estoque</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF12</td>
+<td>Solicitação de pagamento a serviço externo simulado (mock) com registro de retorno</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF13</td>
+<td>Programa de fidelização: acúmulo, saldo, extrato e resgate</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF14</td>
+<td>Promoções e campanhas</td>
+<td>Modelado e documentado (regra de aplicação não aplicada ao total)</td>
+</tr>
+<tr>
+<td>RF15</td>
+<td>Portabilidade e eliminação de dados pessoais pelo titular</td>
+<td>Implementado</td>
+</tr>
+<tr>
+<td>RF16</td>
+<td>Consulta de log de auditoria por administrador</td>
+<td>Implementado</td>
+</tr>
+</tbody>
+</table>
+<h2>2.3 Requisitos não funcionais</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito não funcional</th>
+<th>Como foi atendido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF01</td>
+<td>Segurança de credenciais</td>
+<td>senha com bcrypt; hash nunca retorna em resposta</td>
+</tr>
+<tr>
+<td>RNF02</td>
+<td>Autenticação e autorização</td>
+<td>JWT HS256 de curta duração; refresh token rotativo persistido só como hash</td>
+</tr>
+<tr>
+<td>RNF03</td>
+<td>Privacidade (LGPD)</td>
+<td>consentimento com carimbo de tempo, minimização, mascaramento de e-mail em log de falha</td>
+</tr>
+<tr>
+<td>RNF04</td>
+<td>Rastreabilidade</td>
+<td><code>requestId</code> por requisição (header e log), IP e trilha de status do pedido</td>
+</tr>
+<tr>
+<td>RNF05</td>
+<td>Consistência sob concorrência</td>
+<td>reserva de estoque com <code>SELECT ... FOR UPDATE</code> e transação curta</td>
+</tr>
+<tr>
+<td>RNF06</td>
+<td>Tolerância a falhas na integração</td>
+<td>pagamento com <code>Idempotency-Key</code>: retry não duplica baixa nem pontos</td>
+</tr>
+<tr>
+<td>RNF07</td>
+<td>Disponibilidade / desempenho</td>
+<td>SQLite em modo WAL; consultas paginadas; ausência de N+1 nas listagens de pedido</td>
+</tr>
+<tr>
+<td>RNF08</td>
+<td>Portabilidade de banco</td>
+<td>enums como VARCHAR com CHECK; <code>DATABASE_URL</code> troca SQLite por PostgreSQL</td>
+</tr>
+<tr>
+<td>RNF09</td>
+<td>Documentação executável</td>
+<td>OpenAPI gerado do código, sem contrato paralelo sujeito a divergência</td>
+</tr>
+<tr>
+<td>RNF10</td>
+<td>Testabilidade</td>
+<td>coleção Postman com asserções e plano de testes com cenários positivos e negativos</td>
+</tr>
+</tbody>
+</table>
+<h2>2.4 Multicanalidade como requisito de domínio</h2>
+<p>O canal não é um parâmetro de rastreio opcional: é parte do pedido. A implementação trata os três
+pontos exigidos pelo roteiro:</p>
+<ol>
+<li><strong>Campo de domínio tipado</strong> — <code>canal_pedido</code> é um ENUM com <code>APP</code>, <code>TOTEM</code>, <code>BALCAO</code>, <code>PICKUP</code>
+   e <code>WEB</code>, persistido como <code>VARCHAR</code> com <code>CHECK</code>, e obrigatório na criação.</li>
+<li><strong>Validação no contrato</strong> — a ausência do campo retorna <code>422 DADOS_INVALIDOS</code> com
+   <code>details[].field = "canalPedido"</code>; valor fora do enum retorna <code>422</code> listando as opções válidas.</li>
+<li><strong>Consulta por canal</strong> — <code>GET /pedidos?canalPedido=TOTEM</code> filtra a listagem, e o campo é
+   auditado na criação (<code>PEDIDO_CRIADO</code> guarda o canal no payload do log).</li>
+</ol>
+<h2>2.5 Priorização: entregue, proposto e justificativas</h2>
+<p>O roteiro pede priorização explícita entre o que foi implementado e o que ficou proposto. A decisão
+foi guiada por um critério: <strong>o que fecha o fluxo crítico de forma verificável</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Frente</th>
+<th>Decisão</th>
+<th>Justificativa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pedido + pagamento mock + status</td>
+<td>Entregue completo</td>
+<td>é o fluxo crítico recomendado; sem ele a nota de implementação cai para a faixa mínima</td>
+</tr>
+<tr>
+<td>Multicanalidade (<code>canalPedido</code>)</td>
+<td>Entregue completo</td>
+<td>requisito de domínio explícito, de baixo custo e alto impacto na avaliação</td>
+</tr>
+<tr>
+<td>Estoque por unidade</td>
+<td>Entregue completo</td>
+<td>é o que dá sentido à reserva; sem ele não existe 409 de negócio</td>
+</tr>
+<tr>
+<td>Fidelização</td>
+<td>Entregue (acúmulo, extrato, resgate)</td>
+<td>requisito obrigatório e demonstra regra de negócio com restrição de consentimento</td>
+</tr>
+<tr>
+<td>LGPD operacional</td>
+<td>Entregue (consentimento, portabilidade, anonimização)</td>
+<td>o roteiro exige demonstração, não citação</td>
+</tr>
+<tr>
+<td>Auditoria</td>
+<td>Entregue, inclusive consulta por ADMIN</td>
+<td>transforma "log" em evidência verificável na API</td>
+</tr>
+<tr>
+<td>Promoções</td>
+<td>Modelado, regra documentada, não aplicada ao total</td>
+<td>o roteiro aceita "ao menos como regra"; preferiu-se fechar o fluxo crítico a abrir uma frente incompleta</td>
+</tr>
+<tr>
+<td>Interface/webhook real de gateway</td>
+<td>Proposto</td>
+<td>fora do escopo do mock, que é o que o roteiro pede</td>
+</tr>
+<tr>
+<td>Reserva com expiração automática (TTL)</td>
+<td>Proposto</td>
+<td>exigiria job agendado; mitigado cancelando o pedido na recusa</td>
+</tr>
+<tr>
+<td>Deploy público</td>
+<td>Proposto</td>
+<td>o roteiro aceita execução local reproduzível</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h1>3 MODELAGEM E ARQUITETURA</h1>
+<h2>3.1 Diagrama de casos de uso</h2>
+<p><img alt="Diagrama de casos de uso" src="../diagramas/img/casos-de-uso-1.png"></p>
+<p class="esquerda">Atores: Cliente (App/Web/Totem), Atendente (balcão), Cozinha, Gerente/Administrador e
+Gateway de Pagamento (sistema externo simulado). Para preservar a legibilidade dos rótulos no PDF,
+os casos de uso aparecem agrupados por área de funcionalidade; a relação completa de casos por área
+está em <code>docs/diagramas/casos-de-uso.md</code>, que acompanha o repositório.</p>
+
+<h3>3.1.1 Descrição do caso de uso crítico — Realizar Pedido + Solicitar Pagamento</h3>
+<p><strong>Descrição:</strong> o cliente monta um pedido em um dos canais, o sistema reserva o estoque da unidade e
+envia a solicitação de pagamento ao gateway simulado, que aprova ou recusa.</p>
+<p><strong>Ator principal:</strong> Cliente. <strong>Atores secundários:</strong> Gateway de Pagamento (mock).</p>
+<p><strong>Pré-condições:</strong> usuário autenticado; unidade ativa; produto ativo e presente no cardápio da
+unidade; saldo de estoque suficiente.</p>
+<p><strong>Pós-condições:</strong> aprovado — pedido <code>PAGO</code>, estoque baixado, pontos creditados se houver
+consentimento; recusado — pedido <code>CANCELADO</code>, reserva liberada, sem pontos.</p>
+<p><strong>Fluxo base:</strong></p>
+<ol>
+<li>Cliente envia <code>POST /pedidos</code> com <code>canalPedido</code>, <code>unidadeId</code> e itens.</li>
+<li>Sistema valida canal, unidade, produto, cardápio e disponibilidade.</li>
+<li>Sistema congela o preço do cardápio e calcula o subtotal; aplica resgate se solicitado.</li>
+<li>Sistema reserva o estoque e cria o pedido em <code>AGUARDANDO_PAGAMENTO</code>.</li>
+<li>Cliente envia <code>POST /pagamentos</code> com <code>Idempotency-Key</code>.</li>
+<li>Gateway mock devolve transação aprovada.</li>
+<li>Sistema converte reserva em baixa, move o pedido para <code>PAGO</code> e credita pontos.</li>
+<li>Cliente acompanha por <code>GET /pedidos/{id}</code>.</li>
+</ol>
+<p><strong>Fluxos de exceção:</strong> <code>422</code> para payload inválido (inclusive <code>canalPedido</code> ausente); <code>404</code> para
+unidade, produto ou estoque inexistente; <code>409</code> para produto indisponível ou estoque insuficiente;
+<code>409</code> para pedido já processado; <code>200</code> para replay idempotente.</p>
+<p><strong>Regras de negócio:</strong> RN1 canal obrigatório e rastreável; RN2 total calculado no servidor;
+RN3 reserva só vira baixa com pagamento aprovado; RN4 idempotência impede duplicidade;
+RN5 resgate exige consentimento e múltiplos de 100 pontos.</p>
+<h2>3.2 DER e modelo de dados</h2>
+<p><img alt="DER — núcleo comercial" src="../diagramas/img/der-1.png"></p>
+<p><em>Figura 3.2 — Núcleo comercial: pedido, cardápio por unidade, estoque e pagamento.</em></p>
+<p><img alt="DER — apoio operacional e governança" src="../diagramas/img/der-2.png"></p>
+<p><em>Figura 3.3 — Apoio operacional e governança: movimentações de estoque, fidelidade, promoções,
+histórico de status, auditoria e refresh tokens.</em></p>
+<p>O modelo tem <strong>14 tabelas</strong>. As decisões estruturais mais relevantes:</p>
+<table>
+<thead>
+<tr>
+<th>Entidade</th>
+<th>Papel</th>
+<th>Decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usuarios</code></td>
+<td>identidade e perfil</td>
+<td>e-mail único; senha em hash; consentimento com data</td>
+</tr>
+<tr>
+<td><code>unidades</code></td>
+<td>lojas da rede</td>
+<td>isolamento de operação</td>
+</tr>
+<tr>
+<td><code>produtos</code></td>
+<td>catálogo da rede</td>
+<td>preço base de referência</td>
+</tr>
+<tr>
+<td><code>cardapio_unidade</code></td>
+<td>preço e disponibilidade por loja</td>
+<td>N:N com atributos — atende "cardápio por unidade"</td>
+</tr>
+<tr>
+<td><code>estoques</code></td>
+<td>saldo físico e reservado por loja</td>
+<td><code>CHECK(reservada &lt;= quantidade)</code></td>
+</tr>
+<tr>
+<td><code>movimentacoes_estoque</code></td>
+<td>histórico append-only</td>
+<td>ENTRADA/SAIDA/RESERVA/LIBERACAO/BAIXA</td>
+</tr>
+<tr>
+<td><code>pedidos</code></td>
+<td>cabeçalho multicanal</td>
+<td><code>canal_pedido</code>, <code>desconto</code>, <code>pontos_resgatados</code></td>
+</tr>
+<tr>
+<td><code>pedido_itens</code></td>
+<td>itens com preço congelado</td>
+<td>preço vem do cardápio no momento da compra</td>
+</tr>
+<tr>
+<td><code>pagamentos</code></td>
+<td>cobrança desacoplada</td>
+<td><code>UNIQUE(idempotency_key)</code>, payload do gateway em JSON</td>
+</tr>
+<tr>
+<td><code>pedido_status_historico</code></td>
+<td>trilha de status</td>
+<td>quem, quando, de qual para qual</td>
+</tr>
+<tr>
+<td><code>pontos_transacoes</code></td>
+<td>extrato de fidelidade</td>
+<td><code>UNIQUE(pedido_id, tipo)</code> impede crédito duplicado</td>
+</tr>
+<tr>
+<td><code>promocoes</code></td>
+<td>campanhas</td>
+<td>escopo opcional por unidade/produto e vigência</td>
+</tr>
+<tr>
+<td><code>auditoria_logs</code></td>
+<td>log de ações sensíveis</td>
+<td>sem update/delete pela aplicação</td>
+</tr>
+<tr>
+<td><code>refresh_tokens</code></td>
+<td>sessão de longa duração</td>
+<td>apenas hash SHA-256, com revogação</td>
+</tr>
+</tbody>
+</table>
+<h2>3.3 Arquitetura em camadas</h2>
+<pre><code>app/
+├── domain/          # enums, exceções e regras puras (sem FastAPI, sem SQLAlchemy)
+├── application/     # casos de uso: orquestram transação, repositório e auditoria
+├── infrastructure/  # SQLAlchemy, Alembic, repositórios, JWT/bcrypt, seed
+└── api/             # routers, schemas Pydantic, dependências, tratamento de erro
+</code></pre>
+<p>A dependência aponta sempre para dentro: <code>api → application → domain</code>, e <code>infrastructure</code>
+implementa o que as camadas internas precisam. Consequências práticas:</p>
+<ul>
+<li>as regras de transição de status e o cálculo de pontos são funções puras, testáveis sem banco;</li>
+<li>trocar SQLite por PostgreSQL não altera nenhuma camada acima de <code>infrastructure</code>;</li>
+<li>a documentação OpenAPI deriva dos schemas da borda, então contrato e implementação não divergem.</li>
+</ul>
+<h2>3.4 Diagrama de classes e máquina de estados</h2>
+<p><img alt="Diagrama de classes" src="../diagramas/img/classes-1.png"></p>
+<p><img alt="Máquina de estados do pedido" src="../diagramas/img/classes-2.png"></p>
+<p>A matriz de transições é aplicada no servidor, não na interface:</p>
+<table>
+<thead>
+<tr>
+<th>Transição</th>
+<th>Perfis autorizados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGUARDANDO_PAGAMENTO → PAGO</code></td>
+<td>sistema (pagamento), ADMIN, GERENTE, ATENDENTE</td>
+</tr>
+<tr>
+<td><code>AGUARDANDO_PAGAMENTO → CANCELADO</code></td>
+<td>CLIENTE (próprio pedido), ATENDENTE, GERENTE, ADMIN</td>
+</tr>
+<tr>
+<td><code>PAGO → EM_PREPARO</code></td>
+<td>COZINHA, GERENTE, ADMIN</td>
+</tr>
+<tr>
+<td><code>PAGO → CANCELADO</code></td>
+<td>GERENTE, ADMIN</td>
+</tr>
+<tr>
+<td><code>EM_PREPARO → PRONTO</code></td>
+<td>COZINHA, GERENTE, ADMIN</td>
+</tr>
+<tr>
+<td><code>EM_PREPARO → CANCELADO</code></td>
+<td>GERENTE, ADMIN</td>
+</tr>
+<tr>
+<td><code>PRONTO → ENTREGUE</code></td>
+<td>ATENDENTE, GERENTE, ADMIN</td>
+</tr>
+</tbody>
+</table>
+<h2>3.5 Diagrama de sequência do fluxo crítico</h2>
+<p><img alt="Sequência Pedido → Pagamento → Status" src="../diagramas/img/sequencia-pedido-pagamento-1.png"></p>
+<p>O diagrama evidencia três pontos de controle: <code>SELECT ... FOR UPDATE</code> antes de alterar saldo,
+consulta por <code>idempotency_key</code> antes de qualquer efeito e validação da matriz de transições antes
+de mudar status.</p>
+<div class="page-break"></div>
+
+<h1>4 API E ENDPOINTS</h1>
+<h2>4.1 Organização por recurso</h2>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Operações</th>
+<th>Autenticação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/auth</code></td>
+<td>login, refresh, logout, me</td>
+<td>público / JWT</td>
+</tr>
+<tr>
+<td><code>/usuarios</code></td>
+<td>cadastro, me, me/dados, me (PATCH/DELETE), listagem</td>
+<td>público / JWT / gestão</td>
+</tr>
+<tr>
+<td><code>/unidades</code></td>
+<td>listar, detalhar, criar, cardápio, estoque, movimentação</td>
+<td>JWT / gestão</td>
+</tr>
+<tr>
+<td><code>/produtos</code></td>
+<td>listar, detalhar, criar, atualizar, desativar</td>
+<td>JWT / gestão</td>
+</tr>
+<tr>
+<td><code>/pedidos</code></td>
+<td>criar, listar com filtros, detalhar, atualizar status, pagamentos</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td><code>/pagamentos</code></td>
+<td>solicitar (idempotente), detalhar</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td><code>/fidelidade</code></td>
+<td>saldo, extrato, regras</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td><code>/auditoria</code></td>
+<td>consultar log</td>
+<td>ADMIN</td>
+</tr>
+<tr>
+<td><code>/health</code></td>
+<td>disponibilidade</td>
+<td>público</td>
+</tr>
+</tbody>
+</table>
+<p>Todas as listagens são paginadas no envelope <code>{ "data": [...], "meta": { page, limit, total, totalPages } }</code>,
+com <code>limit</code> entre 1 e 100.</p>
+<h2>4.2 Padrão de erro</h2>
+<p>Toda falha — de validação, de negócio, de autorização ou interna — responde no mesmo formato:</p>
+<pre><code class="language-json">{
+  &quot;error&quot;: &quot;ESTOQUE_INSUFICIENTE&quot;,
+  &quot;message&quot;: &quot;Não há quantidade suficiente para um ou mais itens.&quot;,
+  &quot;details&quot;: [{ &quot;field&quot;: &quot;itens&quot;, &quot;issue&quot;: &quot;Produto 1: solicitado 999, disponível 20&quot; }],
+  &quot;timestamp&quot;: &quot;2026-02-05T12:00:00Z&quot;,
+  &quot;path&quot;: &quot;/pedidos&quot;,
+  &quot;requestId&quot;: &quot;3f1c0a7d9e2b4c5f8a6d1e2f3a4b5c6d&quot;
+}
+</code></pre>
+<p>O mesmo <code>requestId</code> retorna no header <code>X-Request-ID</code> e é gravado na auditoria, permitindo ligar uma
+resposta ao registro correspondente. Mensagens de validação são traduzidas para português; nenhum
+texto do validador vaza para o contrato.</p>
+<h2>4.3 Contrato de pedido e o campo canalPedido</h2>
+<p>Requisição de criação (trecho do roteiro, atendido integralmente):</p>
+<pre><code class="language-json">{
+  &quot;canalPedido&quot;: &quot;TOTEM&quot;,
+  &quot;unidadeId&quot;: 2,
+  &quot;itens&quot;: [
+    { &quot;produtoId&quot;: 2, &quot;quantidade&quot;: 2 },
+    { &quot;produtoId&quot;: 7, &quot;quantidade&quot;: 1 }
+  ],
+  &quot;formaPagamento&quot;: &quot;MOCK&quot;,
+  &quot;resgatarPontos&quot;: false
+}
+</code></pre>
+<p>Resposta <code>201</code>:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 2,
+  &quot;clienteId&quot;: 5,
+  &quot;unidadeId&quot;: 2,
+  &quot;canalPedido&quot;: &quot;TOTEM&quot;,
+  &quot;status&quot;: &quot;AGUARDANDO_PAGAMENTO&quot;,
+  &quot;formaPagamento&quot;: &quot;MOCK&quot;,
+  &quot;subtotalItens&quot;: 31.5,
+  &quot;desconto&quot;: 0,
+  &quot;pontosResgatados&quot;: 0,
+  &quot;total&quot;: 31.5,
+  &quot;itens&quot;: [
+    { &quot;produtoId&quot;: 2, &quot;nome&quot;: &quot;Pastel de Carne de Sol&quot;, &quot;quantidade&quot;: 2, &quot;precoUnitario&quot;: 12.0, &quot;subtotal&quot;: 24.0 },
+    { &quot;produtoId&quot;: 7, &quot;nome&quot;: &quot;Suco de Cajá&quot;, &quot;quantidade&quot;: 1, &quot;precoUnitario&quot;: 7.5, &quot;subtotal&quot;: 7.5 }
+  ]
+}
+</code></pre>
+<p>Ausência ou valor inválido de <code>canalPedido</code> produzem <code>422</code> com <code>details[].field = "canalPedido"</code>,
+conforme exigido no item 5.5 do roteiro.</p>
+<h2>4.4 Exemplos de requisição e resposta</h2>
+<p><strong>Login</strong> — <code>POST /auth/login</code> (público)</p>
+<pre><code class="language-json">{ &quot;email&quot;: &quot;cliente@raizes.com.br&quot;, &quot;senha&quot;: &quot;Senha@123&quot; }
+</code></pre>
+<p><code>200</code>:</p>
+<pre><code class="language-json">{
+  &quot;accessToken&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,
+  &quot;refreshToken&quot;: &quot;7D6pE3afzMt0P0V...&quot;,
+  &quot;tokenType&quot;: &quot;Bearer&quot;,
+  &quot;expiresIn&quot;: 3600,
+  &quot;user&quot;: { &quot;id&quot;: 5, &quot;nome&quot;: &quot;Maria Cliente&quot;, &quot;perfil&quot;: &quot;CLIENTE&quot; }
+}
+</code></pre>
+<p><strong>Pagamento mock</strong> — <code>POST /pagamentos</code> (header <code>Idempotency-Key</code> obrigatório)</p>
+<pre><code class="language-json">{ &quot;pedidoId&quot;: 2, &quot;simularResultado&quot;: &quot;APROVADO&quot; }
+</code></pre>
+<p><code>201</code>:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;pedidoId&quot;: 2,
+  &quot;pedidoStatus&quot;: &quot;PAGO&quot;,
+  &quot;status&quot;: &quot;APROVADO&quot;,
+  &quot;valor&quot;: 31.5,
+  &quot;formaPagamento&quot;: &quot;MOCK&quot;,
+  &quot;idempotencyKey&quot;: &quot;pedido-2-pagamento-1&quot;,
+  &quot;transacaoExternaId&quot;: &quot;mock_5f1c2a9b7e3d4c8a&quot;,
+  &quot;motivoRecusa&quot;: null,
+  &quot;payloadResposta&quot;: { &quot;simulado&quot;: true, &quot;status&quot;: &quot;APROVADO&quot;, &quot;valor&quot;: &quot;31.50&quot; },
+  &quot;criadoEm&quot;: &quot;2026-11-20T22:05:03Z&quot;,
+  &quot;processadoEm&quot;: &quot;2026-11-20T22:05:03Z&quot;
+}
+</code></pre>
+<p><strong>Erro de negócio</strong> — <code>409</code></p>
+<pre><code class="language-json">{
+  &quot;error&quot;: &quot;ESTOQUE_INSUFICIENTE&quot;,
+  &quot;message&quot;: &quot;Não há quantidade suficiente para um ou mais itens.&quot;,
+  &quot;details&quot;: [{ &quot;field&quot;: &quot;itens&quot;, &quot;issue&quot;: &quot;Produto 1: solicitado 999, disponível 20&quot; }],
+  &quot;timestamp&quot;: &quot;2026-11-20T22:05:03Z&quot;,
+  &quot;path&quot;: &quot;/pedidos&quot;,
+  &quot;requestId&quot;: &quot;a9b5c3e1d71d4788b529c78d9a4ed71a&quot;
+}
+</code></pre>
+<h2>4.5 Regras mínimas de contrato</h2>
+<table>
+<thead>
+<tr>
+<th>Regra do roteiro</th>
+<th>Aplicação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URLs no plural</td>
+<td><code>/produtos</code>, <code>/pedidos</code>, <code>/usuarios</code>, <code>/unidades</code></td>
+</tr>
+<tr>
+<td>IDs no path</td>
+<td><code>/pedidos/{id}</code>, <code>/unidades/{id}/estoque</code></td>
+</tr>
+<tr>
+<td>Paginação em listagens</td>
+<td><code>?page=1&amp;limit=10</code> em todas</td>
+</tr>
+<tr>
+<td>Status code coerente</td>
+<td>200, 201, 204, 401, 403, 404, 409, 422</td>
+</tr>
+<tr>
+<td>Erro padronizado</td>
+<td>mesmo JSON em qualquer falha</td>
+</tr>
+<tr>
+<td><code>canalPedido</code> no contrato</td>
+<td>obrigatório, validado e filtrável</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h1>5 LGPD, PRIVACIDADE E SEGURANÇA</h1>
+<h2>5.1 Dados pessoais tratados</h2>
+<table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Finalidade</th>
+<th>Base legal</th>
+<th>Armazenamento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nome, e-mail, telefone</td>
+<td>identificação, contato e entrega</td>
+<td>execução de contrato (art. 7º, V)</td>
+<td><code>usuarios</code></td>
+</tr>
+<tr>
+<td>senha</td>
+<td>autenticação</td>
+<td>execução de contrato</td>
+<td><code>usuarios.senha_hash</code> (bcrypt)</td>
+</tr>
+<tr>
+<td>histórico de pedidos</td>
+<td>obrigação fiscal e suporte</td>
+<td>obrigação legal (art. 7º, II)</td>
+<td><code>pedidos</code>, <code>pedido_itens</code></td>
+</tr>
+<tr>
+<td>pontos de fidelidade</td>
+<td>programa de vantagens</td>
+<td>consentimento (art. 7º, I)</td>
+<td><code>pontos_transacoes</code></td>
+</tr>
+<tr>
+<td>IP e requestId</td>
+<td>segurança e rastreabilidade</td>
+<td>legítimo interesse (art. 7º, IX)</td>
+<td><code>auditoria_logs</code></td>
+</tr>
+</tbody>
+</table>
+<p>O consentimento é registrado em dois campos (<code>consentimento_lgpd</code> booleano e <code>consentimento_em</code>
+com data e hora), e o resgate de fidelidade é bloqueado quando ele não está vigente.</p>
+<h2>5.2 Controles implementados</h2>
+<ul>
+<li><strong>Credenciais:</strong> bcrypt com salt; hash nunca retorna em resposta nem em log.</li>
+<li><strong>Autenticação:</strong> JWT HS256 com expiração de 60 minutos; refresh token rotativo, persistido
+  somente como SHA-256 e revogado a cada uso, no logout e na anonimização.</li>
+<li><strong>Autorização:</strong> dependência <code>require_perfis</code> por endpoint e matriz de transições por perfil.</li>
+<li><strong>Minimização:</strong> o resumo de usuário retorna apenas <code>id</code>, <code>nome</code> e <code>perfil</code>; o e-mail em falha de
+  login é mascarado (<code>cl***@raizes.com.br</code>); respostas de erro não expõem stack trace.</li>
+<li><strong>Integridade do contrato:</strong> validação de entrada na borda (Pydantic) e de regra no domínio,
+  impedindo que o cliente envie total, preço ou status.</li>
+<li><strong>Auditoria append-only:</strong> registro de login, leitura de dados pessoais, exportação,
+  anonimização, criação de pedido, mudança de status, pagamento e movimentação de estoque, com
+  <code>requestId</code> e IP.</li>
+</ul>
+<h2>5.3 Retenção e eliminação</h2>
+<table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Retenção</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conta e dados cadastrais</td>
+<td>enquanto ativa ou até solicitação</td>
+<td><code>DELETE /usuarios/me</code> → anonimização</td>
+</tr>
+<tr>
+<td>Pedidos e pagamentos</td>
+<td>5 anos (fiscal/contábil)</td>
+<td>mantidos, sem vínculo com dados pessoais</td>
+</tr>
+<tr>
+<td>Logs de auditoria</td>
+<td>12 meses</td>
+<td>append-only, sem payload sensível</td>
+</tr>
+<tr>
+<td>Refresh tokens</td>
+<td>7 dias</td>
+<td>expiração e revogação</td>
+</tr>
+</tbody>
+</table>
+<p>A anonimização substitui o nome por "Titular anonimizado", troca o e-mail por endereço sintético em
+domínio reservado (<code>anonimizado+{id}@removido.invalid</code>), limpa o telefone, invalida a senha com hash
+aleatório descartado, revoga tokens e marca a conta como inativa — preservando os pedidos para a
+obrigação legal, sem vínculo com a pessoa identificada.</p>
+<h2>5.4 Evidência de auditoria</h2>
+<p>A consulta <code>GET /auditoria?acao=PEDIDO_CRIADO</code> (ADMIN) devolve os registros com <code>requestId</code>, IP e
+payload resumido, comprovando pela própria API que ações sensíveis geram rastro. As ações
+registradas são: <code>LOGIN_SUCESSO</code>, <code>LOGIN_FALHA</code>, <code>LOGIN_BLOQUEADO</code>, <code>TOKEN_RENOVADO</code>, <code>LOGOUT</code>,
+<code>USUARIO_CADASTRADO</code>, <code>USUARIO_ATUALIZADO</code>, <code>LEITURA_DADOS_PESSOAIS</code>, <code>EXPORTACAO_DADOS_PESSOAIS</code>,
+<code>LGPD_ANONIMIZACAO</code>, <code>PEDIDO_CRIADO</code>, <code>PEDIDO_STATUS_ALTERADO</code>, <code>PAGAMENTO_APROVADO</code>,
+<code>PAGAMENTO_RECUSADO</code>, <code>ESTOQUE_MOVIMENTADO</code>, <code>PRODUTO_CRIADO</code>, <code>PRODUTO_ATUALIZADO</code>,
+<code>PRODUTO_DESATIVADO</code>, <code>UNIDADE_CRIADA</code> e <code>CARDAPIO_ATUALIZADO</code>.</p>
+<div class="page-break"></div>
+
+<h1>6 ENTREGA TÉCNICA</h1>
+<h2>6.1 Repositório e execução</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repositório</td>
+<td>https://github.com/HTAss01/raizes-api (público)</td>
+</tr>
+<tr>
+<td>Linguagem</td>
+<td>Python 3.11+ (validado em 3.12)</td>
+</tr>
+<tr>
+<td>Banco</td>
+<td>SQLite por padrão; PostgreSQL via <code>DATABASE_URL</code></td>
+</tr>
+<tr>
+<td>Migrações</td>
+<td>Alembic (<code>alembic upgrade head</code>)</td>
+</tr>
+<tr>
+<td>Seed</td>
+<td><code>python -m app.infrastructure.db.seed</code></td>
+</tr>
+<tr>
+<td>API</td>
+<td><code>uvicorn app.main:app --reload --port 8000</code></td>
+</tr>
+</tbody>
+</table>
+<p>O <code>README.md</code> do repositório contém o passo a passo completo: requisitos, <code>.env.example</code>,
+instalação, criação do banco, migrations, seed, execução, acesso ao Swagger, execução dos testes e
+credenciais de cada perfil.</p>
+<h2>6.2 Documentação da API</h2>
+<ul>
+<li>Swagger UI: <code>http://localhost:8000/docs</code></li>
+<li>OpenAPI JSON: <code>http://localhost:8000/openapi.json</code></li>
+</ul>
+<p>A especificação é <strong>gerada a partir do código</strong>, com exemplos de requisição nos schemas de entrada
+e todos os códigos de status declarados por endpoint. Não existe documento paralelo que possa
+divergir da implementação.</p>
+<h2>6.3 Coleção de testes</h2>
+<p><code>docs/postman/Raizes-API.postman_collection.json</code> — 10 pastas, 59 requisições, com asserções
+(<code>pm.test</code>) e encadeamento de variáveis (<code>accessToken</code>, <code>pedidoId</code>, <code>pagamentoId</code>,
+<code>idempotencyKey</code>). O environment <code>docs/postman/Raizes-API.postman_environment.json</code> define a URL
+base.</p>
+<h2>6.4 Modelo de dados e migrations</h2>
+<p>Duas migrations versionadas: <code>aa96efa3354d</code> (esquema inicial com 14 tabelas) e <code>7ca84e9e7cc6</code>
+(colunas <code>desconto</code> e <code>pontos_resgatados</code> em <code>pedidos</code>, com <code>server_default</code> para compatibilidade
+com SQLite). O DER entregue em <code>docs/diagramas/der.md</code> corresponde exatamente ao banco criado pelas
+migrations.</p>
+<h2>6.5 Histórico de commits</h2>
+<p>O repositório tem histórico incremental, com commits temáticos que evoluem do ambiente para o
+domínio, deste para a persistência, e assim por diante até documentação e testes. Isso permite
+reconstruir a ordem de raciocínio do projeto, e não apenas o resultado final.</p>
+<div class="page-break"></div>
+
+<h1>7 PLANO DE TESTES</h1>
+<p>O plano completo está em <code>docs/PLANO_DE_TESTES.md</code>, com 25 cenários identificados (T01 a T25) e
+respectiva evidência no nome da requisição da coleção. Resumo por categoria:</p>
+<table>
+<thead>
+<tr>
+<th>Categoria</th>
+<th>Cenários</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autenticação e autorização</td>
+<td>5</td>
+<td>login válido, sem token (401), perfil sem permissão (403)</td>
+</tr>
+<tr>
+<td>Validação de dados</td>
+<td>4</td>
+<td>campo obrigatório, enum inválido, header ausente, consentimento ausente</td>
+</tr>
+<tr>
+<td>Regras de negócio</td>
+<td>7</td>
+<td>pedido criado (201), estoque insuficiente (409), transição inválida (409)</td>
+</tr>
+<tr>
+<td>Pagamento mock</td>
+<td>3</td>
+<td>aprovado, recusado, replay idempotente</td>
+</tr>
+<tr>
+<td>Fidelidade, LGPD e auditoria</td>
+<td>6</td>
+<td>resgate sem saldo, cadastro, duplicidade, portabilidade, anonimização, auditoria</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cobertura mínima exigida pelo roteiro:</strong> login com token (T01); acesso sem token (T03); perfil sem
+permissão (T04, T06, T23); campo obrigatório ausente (T08, T16, T20); formato inválido (T09); pedido
+criado (T07); recurso inexistente (T05); estoque insuficiente (T10); pagamento aprovado com mudança
+de status (T13); pagamento recusado (T15); log de ação sensível (T22).</p>
+<p><strong>Como reproduzir:</strong> importar coleção e environment no Postman, selecionar <code>Raizes API - Local</code>,
+abrir o Collection Runner e executar a coleção completa em banco recém-semeado. As variáveis são
+encadeadas automaticamente, na ordem das pastas <code>00</code> a <code>09</code>.</p>
+<div class="page-break"></div>
+
+<h1>8 RESULTADOS OBTIDOS</h1>
+<p>Os números abaixo foram medidos em execução real, contra banco criado por <code>alembic upgrade head</code> e
+populado pelo seed:</p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas de domínio</td>
+<td>14 (+ <code>alembic_version</code>)</td>
+</tr>
+<tr>
+<td>Operações de API publicadas</td>
+<td>34</td>
+</tr>
+<tr>
+<td>Coleção Postman</td>
+<td>59 requisições em 10 pastas</td>
+</tr>
+<tr>
+<td>Execução completa da coleção</td>
+<td>59/59 com status esperado, zero falha</td>
+</tr>
+<tr>
+<td>Cenários documentados</td>
+<td>25 (8 positivos, 17 negativos)</td>
+</tr>
+<tr>
+<td>Pontos de auditoria gerados na execução</td>
+<td>20 tipos de ação</td>
+</tr>
+<tr>
+<td>Migrations</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>Comportamentos verificados que traduzem regra de negócio, e não apenas CRUD:</p>
+<ul>
+<li>reserva de estoque reduz o disponível na criação (<code>40 → 38</code>) e a baixa ocorre só na aprovação;</li>
+<li>replay da mesma <code>Idempotency-Key</code> devolve <code>200</code> com o mesmo pagamento, sem segunda baixa nem
+  segundo crédito de pontos;</li>
+<li>pagamento recusado libera a reserva e leva o pedido a <code>CANCELADO</code>, sem creditar pontos;</li>
+<li>cancelamento devolve o saldo exatamente ao valor anterior (<code>40 → 40</code>);</li>
+<li>cozinha não consegue pular de <code>AGUARDANDO_PAGAMENTO</code> para <code>EM_PREPARO</code> (<code>409</code>);</li>
+<li>segundo cliente recebe <code>403</code> ao tentar consultar ou pagar pedido alheio;</li>
+<li>após anonimização, o token antigo retorna <code>401</code> e o login com as credenciais originais também;</li>
+<li><code>GET /usuarios</code> continua funcionando normalmente depois de uma anonimização — defeito encontrado
+  durante os testes e corrigido antes da entrega (validação de e-mail na saída rejeitava o domínio
+  reservado usado na anonimização).</li>
+</ul>
+<div class="page-break"></div>
+
+<h1>9 CONCLUSÃO</h1>
+<p>O trabalho entregou o back-end completo do fluxo crítico proposto: o pedido nasce com canal
+obrigatório, o servidor calcula preço e total, reserva estoque da unidade correta, submete o
+pagamento a um gateway simulado com garantia de idempotência e só então baixa o estoque, credita
+pontos e evolui o status conforme a matriz de permissões. Recusa e cancelamento devolvem o saldo,
+o que fecha o ciclo patrimonial.</p>
+<p>O DER, o diagrama de classes, a máquina de estados e o diagrama de sequência não são peças
+decorativas: eles explicam decisões que aparecem no código — a reserva com linha bloqueada, a
+chave de idempotência única, o preço congelado no item, a restrição <code>UNIQUE(pedido_id, tipo)</code> que
+impede crédito duplicado de pontos. Os endpoints, por sua vez, refletem essa modelagem um a um, e
+o Swagger é gerado do mesmo código que executa, eliminando a divergência entre contrato e
+implementação.</p>
+<p>A integração de pagamento foi tratada como o roteiro pede: sem provedor real, mas com envio,
+retorno, persistência do payload, cenários de aprovação e recusa e proteção contra retry. Os erros
+foram padronizados em um único formato, com <code>requestId</code> correlacionável ao log de auditoria.</p>
+<p>Em segurança e LGPD, os controles são operacionais e verificáveis: hash de senha, token de curta
+duração com refresh rotativo, autorização por perfil, minimização das respostas, consentimento com
+data, portabilidade e anonimização preservando obrigações legais, além de auditoria consultável.
+Os testes evidenciam o funcionamento: 59 requisições executadas sem falha, cobrindo positivos e
+negativos, incluindo os casos que costumam ser esquecidos — 401, 403, 409 e o replay idempotente.</p>
+<p>Como propostas de continuidade, ficam: aplicar as promoções ao total do pedido (regra já
+documentada e modelada), expiração automática de reservas com job agendado, envio de notificações
+por canal e deploy público com PostgreSQL. O que foi entregue, no entanto, se sustenta sozinho em
+uma demonstração técnica: roda localmente em três comandos, tem documentação executável, testes
+reproduzíveis e decisões justificadas.</p>
+<div class="page-break"></div>
+
+<h1>REFERÊNCIAS</h1>
+<p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 14724</strong>: informação e documentação — trabalhos
+acadêmicos — apresentação. Rio de Janeiro: ABNT, 2011.</p>
+<p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 6023</strong>: informação e documentação — referências —
+elaboração. Rio de Janeiro: ABNT, 2018.</p>
+<p>BRASIL. <strong>Lei nº 13.709, de 14 de agosto de 2018</strong>. Lei Geral de Proteção de Dados Pessoais (LGPD).
+Brasília, DF: Presidência da República, 2018.</p>
+<p>ALEMBIC. <strong>Alembic documentation</strong>. Disponível em: https://alembic.sqlalchemy.org. Acesso em: 2026.</p>
+<p>FASTAPI. <strong>FastAPI documentation</strong>. Disponível em: https://fastapi.tiangolo.com. Acesso em: 2026.</p>
+<p>OWASP FOUNDATION. <strong>OWASP API Security Top 10 — 2023</strong>. Disponível em:
+https://owasp.org/API-Security/. Acesso em: 2026.</p>
+<p>OWASP FOUNDATION. <strong>OWASP Top 10 — 2021</strong>. Disponível em: https://owasp.org/Top10/. Acesso em: 2026.</p>
+<p>PYDANTIC. <strong>Pydantic v2 documentation</strong>. Disponível em: https://docs.pydantic.dev. Acesso em: 2026.</p>
+<p>SQLALCHEMY. <strong>SQLAlchemy 2.0 documentation</strong>. Disponível em:
+https://docs.sqlalchemy.org/en/20/. Acesso em: 2026.</p>
+<div class="page-break"></div>
+
+<h1>APÊNDICE A — RELAÇÃO COMPLETA DE ENDPOINTS</h1>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Perfil</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/auth/login</code></td>
+<td>público</td>
+<td>autentica e devolve tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/refresh</code></td>
+<td>público</td>
+<td>rotaciona o par de tokens</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/logout</code></td>
+<td>público</td>
+<td>revoga o refresh token</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/auth/me</code></td>
+<td>JWT</td>
+<td>usuário autenticado</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/usuarios</code></td>
+<td>público</td>
+<td>autocadastro de cliente</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>dados do titular</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>atualiza nome/telefone</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios/me/dados</code></td>
+<td>JWT</td>
+<td>portabilidade</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>anonimização</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios</code></td>
+<td>ADMIN, GERENTE</td>
+<td>listagem paginada</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades</code></td>
+<td>JWT</td>
+<td>lista unidades</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{id}</code></td>
+<td>JWT</td>
+<td>detalha unidade</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/unidades</code></td>
+<td>ADMIN, GERENTE</td>
+<td>cria unidade</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{id}/cardapio</code></td>
+<td>JWT</td>
+<td>cardápio com preço e saldo</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/unidades/{id}/cardapio/{produtoId}</code></td>
+<td>ADMIN, GERENTE</td>
+<td>ajusta preço/disponibilidade</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{id}/estoque</code></td>
+<td>operação</td>
+<td>saldo por produto</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/unidades/{id}/estoque/movimentacoes</code></td>
+<td>ADMIN, GERENTE</td>
+<td>entrada/saída manual</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/produtos</code></td>
+<td>JWT</td>
+<td>lista com filtros</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/produtos/{id}</code></td>
+<td>JWT</td>
+<td>detalha produto</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/produtos</code></td>
+<td>ADMIN, GERENTE</td>
+<td>cria produto</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/produtos/{id}</code></td>
+<td>ADMIN, GERENTE</td>
+<td>atualiza produto</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/produtos/{id}</code></td>
+<td>ADMIN, GERENTE</td>
+<td>desativa (lógica)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/pedidos</code></td>
+<td>JWT</td>
+<td>cria pedido multicanal</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos</code></td>
+<td>JWT</td>
+<td>lista com <code>canalPedido</code>, <code>status</code>, <code>unidadeId</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos/{id}</code></td>
+<td>dono/staff</td>
+<td>detalha pedido</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/pedidos/{id}/status</code></td>
+<td>conforme matriz</td>
+<td>atualiza status</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos/{id}/pagamentos</code></td>
+<td>dono/staff</td>
+<td>tentativas de pagamento</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/pagamentos</code></td>
+<td>JWT</td>
+<td>pagamento mock idempotente</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pagamentos/{id}</code></td>
+<td>dono/staff</td>
+<td>detalha pagamento</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/saldo</code></td>
+<td>JWT</td>
+<td>saldo de pontos</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/extrato</code></td>
+<td>JWT</td>
+<td>histórico de pontos</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/regras</code></td>
+<td>JWT</td>
+<td>regras vigentes</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/auditoria</code></td>
+<td>ADMIN</td>
+<td>log de ações sensíveis</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/health</code></td>
+<td>público</td>
+<td>disponibilidade</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h1>APÊNDICE B — CREDENCIAIS DO SEED</h1>
+<p>Todos os usuários usam a senha <code>Senha@123</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>E-mail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADMIN</td>
+<td>admin@raizes.com.br</td>
+</tr>
+<tr>
+<td>GERENTE</td>
+<td>gerente@raizes.com.br</td>
+</tr>
+<tr>
+<td>ATENDENTE</td>
+<td>atendente@raizes.com.br</td>
+</tr>
+<tr>
+<td>COZINHA</td>
+<td>cozinha@raizes.com.br</td>
+</tr>
+<tr>
+<td>CLIENTE</td>
+<td>cliente@raizes.com.br</td>
+</tr>
+</tbody>
+</table>
+<p>Dados de apoio criados pelo seed: 2 unidades (Recife e Caruaru), 8 produtos, cardápio e estoque por
+unidade, 1 campanha promocional e 1 pedido de exemplo já pago. Na unidade de Caruaru, o Acarajé é
+deixado indisponível e com estoque 1, para exercitar os cenários de indisponibilidade e de conflito.</p>
+<div class="page-break"></div>
+
+<h1>APÊNDICE C — COMANDOS DE EXECUÇÃO</h1>
+<pre><code class="language-bash">git clone https://github.com/HTAss01/raizes-api.git
+cd raizes-api
+
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Linux/macOS
+
+pip install -r requirements.txt
+cp .env.example .env          # Windows: copy .env.example .env
+
+alembic upgrade head
+python -m app.infrastructure.db.seed
+
+uvicorn app.main:app --reload --port 8000
+</code></pre>
+<p>Acessos: <code>http://localhost:8000/docs</code> (Swagger), <code>http://localhost:8000/redoc</code> (ReDoc),
+<code>http://localhost:8000/health</code> (saúde). Testes: importar
+<code>docs/postman/Raizes-API.postman_collection.json</code> no Postman e executar pelo Collection Runner.</p>
+</body>
+</html>
