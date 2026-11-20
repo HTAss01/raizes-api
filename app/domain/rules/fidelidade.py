@@ -27,3 +27,21 @@ def calcular_desconto(pontos: int) -> tuple[int, Decimal]:
         return 0, Decimal("0.00")
     resgates = pontos // PONTOS_POR_RESGATE
     return resgates * PONTOS_POR_RESGATE, (VALOR_DO_RESGATE * resgates).quantize(Decimal("0.01"))
+
+
+def planejar_resgate(saldo_pontos: int, total_pedido: Decimal) -> tuple[int, Decimal]:
+    """Resgate limitado pelo saldo e pelo valor do pedido.
+
+    Nunca consome pontos além do necessário, e nunca gera desconto maior que
+    o pedido (o troco não existe: o limite é arredondado para baixo).
+    """
+
+    if saldo_pontos < PONTOS_POR_RESGATE or total_pedido <= 0:
+        return 0, Decimal("0.00")
+
+    max_por_saldo = saldo_pontos // PONTOS_POR_RESGATE
+    max_por_valor = int(total_pedido // VALOR_DO_RESGATE)
+    resgates = min(max_por_saldo, max_por_valor)
+    if resgates <= 0:
+        return 0, Decimal("0.00")
+    return resgates * PONTOS_POR_RESGATE, (VALOR_DO_RESGATE * resgates).quantize(Decimal("0.01"))
