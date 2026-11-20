@@ -37,6 +37,10 @@ htmlcov/
 *.db
 *.db-journal
 *.sqlite-journal
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
 
 # Logs
 logs/
