@@ -6,7 +6,16 @@ from sqlalchemy import text
 
 from app.api.errors import registrar_handlers
 from app.api.middleware import RequestIdMiddleware
-from app.api.routers import auth, produtos, unidades
+from app.api.routers import (
+    auth,
+    fidelidade,
+    pagamentos,
+    pedidos,
+    produtos,
+    unidades,
+    usuarios,
+)
+from app.api.routers import auditoria as auditoria_routes
 from app.config import settings
 from app.infrastructure.db.session import engine
 
@@ -21,6 +30,26 @@ TAGS_METADATA = [
         "description": "Unidades da rede, cardápio por unidade e estoque operacional.",
     },
     {"name": "Produtos", "description": "Catálogo de produtos da rede (CRUD com exclusão lógica)."},
+    {
+        "name": "Usuários",
+        "description": "Autocadastro de cliente com consentimento LGPD e dados do titular.",
+    },
+    {
+        "name": "Pedidos",
+        "description": "Pedido multicanal (canalPedido), reserva de estoque e máquina de estados.",
+    },
+    {
+        "name": "Pagamentos",
+        "description": "Pagamento simulado (mock) com idempotência, aprovação e recusa.",
+    },
+    {
+        "name": "Fidelidade",
+        "description": "Saldo, extrato e regras do programa de pontos (resgate no pedido).",
+    },
+    {
+        "name": "Auditoria",
+        "description": "Consulta do log append-only de ações sensíveis (somente ADMIN).",
+    },
 ]
 
 
@@ -58,8 +87,13 @@ def create_app() -> FastAPI:
     registrar_handlers(app)
 
     app.include_router(auth.router)
+    app.include_router(usuarios.router)
     app.include_router(unidades.router)
     app.include_router(produtos.router)
+    app.include_router(pedidos.router)
+    app.include_router(pagamentos.router)
+    app.include_router(fidelidade.router)
+    app.include_router(auditoria_routes.router)
 
     @app.get("/health", tags=["Saúde"], summary="Verifica API e conexão com o banco")
     def health() -> dict:
