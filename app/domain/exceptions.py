@@ -75,6 +75,16 @@ class PedidoJaProcessadoError(ConflitoError):
     mensagem = "O pedido já foi processado."
 
 
+class EmailJaCadastradoError(ConflitoError):
+    codigo = "EMAIL_JA_CADASTRADO"
+    mensagem = "Já existe um usuário cadastrado com este e-mail."
+
+
+class ProdutoIndisponivelError(ConflitoError):
+    codigo = "PRODUTO_INDISPONIVEL"
+    mensagem = "Um ou mais produtos não estão disponíveis nesta unidade."
+
+
 class RegraNegocioError(DomainError):
     codigo = "REGRA_DE_NEGOCIO_VIOLADA"
     status_code = 422
