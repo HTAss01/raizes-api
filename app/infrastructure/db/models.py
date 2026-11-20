@@ -204,6 +204,12 @@ class Pedido(Base):
         SAEnum(FormaPagamento, native_enum=False, length=ENUM_LEN), nullable=False
     )
     total: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("0.00"))
+    desconto: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False, default=Decimal("0.00"), server_default="0"
+    )
+    pontos_resgatados: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
     observacao: Mapped[str | None] = mapped_column(String(255))
     criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utcnow)
     atualizado_em: Mapped[datetime] = mapped_column(
