@@ -92,13 +92,30 @@ Dependência aponta sempre para dentro: `api → application → domain`,
 
 | Artefato | Caminho |
 |---|---|
-| DER (entidade-relacionamento) | `docs/diagramas/der.md` |
+| Relatório final (PDF, ABNT) | `docs/relatorio/4992316_Projeto_Back_End.pdf` |
+| Fonte do relatório + estilo ABNT | `docs/relatorio/RELATORIO.md`, `docs/relatorio/estilo.css` |
+| DER (entidade-relacionamento) | `docs/diagramas/der.md` (+ PNG/SVG em `docs/diagramas/img/`) |
 | Casos de uso + descrição do fluxo crítico | `docs/diagramas/casos-de-uso.md` |
 | Diagrama de classes e máquina de estados | `docs/diagramas/classes.md` |
 | Sequência Pedido → Pagamento → Status | `docs/diagramas/sequencia-pedido-pagamento.md` |
 | Plano de testes (25 cenários) | `docs/PLANO_DE_TESTES.md` |
 | Coleção Postman | `docs/postman/Raizes-API.postman_collection.json` |
 | Environment Postman | `docs/postman/Raizes-API.postman_environment.json` |
+
+### Regerar a documentação
+
+Os artefatos são gerados por script, para não divergirem do código:
+
+```bash
+pip install -r requirements-dev.txt
+
+python docs/diagramas/renderizar.py       # Mermaid -> PNG/SVG (usa kroki.io)
+python docs/relatorio/gerar_relatorio.py  # Markdown -> HTML -> PDF com sumário paginado
+```
+
+O PDF é montado com capa, folha de rosto, sumário com números de página, apêndice de contrato
+extraído do OpenAPI e paginação a partir da introdução (NBR 14724). Se a máquina não tiver
+Chrome ou Edge, o script avisa que não conseguiu imprimir.
 
 ## Como executar
 

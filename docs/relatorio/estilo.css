@@ -1,4 +1,4 @@
-/* Estilo de impressão inspirado nas normas ABNT para trabalho acadêmico. */
+/* Estilo de impressão conforme NBR 14724 (margens 3/2/2/3, Times 12, espaço 1,5). */
 
 @page {
   size: A4;
@@ -50,8 +50,6 @@ h3 {
   page-break-after: avoid;
 }
 
-strong { font-weight: bold; }
-
 ul, ol {
   margin: 0 0 0.8em 0;
   padding-left: 1.5cm;
@@ -75,10 +73,7 @@ th, td {
   text-align: left;
 }
 
-th {
-  background: #eeeeee;
-  font-weight: bold;
-}
+th { background: #eeeeee; font-weight: bold; }
 
 tr { page-break-inside: avoid; }
 
@@ -107,67 +102,121 @@ pre code { background: none; padding: 0; }
 img {
   display: block;
   max-width: 100%;
-  max-height: 21cm;
+  max-height: 20cm;
   margin: 0.6em auto 0.3em auto;
   page-break-inside: avoid;
 }
 
-.page-break {
-  page-break-after: always;
-}
+.page-break { page-break-after: always; }
 
-.esquerda {
-  text-align: left;
-  text-indent: 0;
-}
+.figura-api { max-height: 13.5cm; }
 
-.sumario {
-  text-align: left;
-  text-indent: 0;
-  line-height: 1.9;
-}
+.esquerda { text-align: left; text-indent: 0; }
 
 /* ---------------- Capa ---------------- */
 
-.capa {
-  height: 24.5cm;
+.capa,
+.folha-rosto {
+  height: 24.4cm;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
 }
 
-.capa-instituicao {
-  font-size: 12pt;
+.capa-topo p {
+  text-indent: 0;
   font-weight: bold;
-  line-height: 1.6;
-  margin-top: 1.5cm;
+  margin: 0;
+  line-height: 1.5;
 }
 
-.capa-titulo h1 {
+.capa-meio p { text-indent: 0; margin: 0 0 0.2em 0; }
+
+.capa-autor { margin-top: 3cm !important; font-weight: bold; }
+
+.capa-ru { font-size: 11pt; margin-bottom: 3cm !important; }
+
+.capa-titulo {
   page-break-before: avoid;
   text-align: center;
   font-size: 20pt;
-  margin: 0 0 0.6cm 0;
-  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 0.5cm 0;
+  letter-spacing: 0.04em;
 }
 
-.capa-titulo h2 {
+.capa-subtitulo {
   text-align: center;
   font-size: 12pt;
   font-weight: normal;
   margin: 0 auto;
   max-width: 14cm;
   line-height: 1.4;
+  page-break-before: avoid;
 }
 
-.capa-autor {
-  font-size: 12pt;
-  line-height: 1.8;
-}
-
-.capa-rodape {
-  font-size: 12pt;
+.capa-base p {
+  text-indent: 0;
+  margin: 0;
   font-weight: bold;
-  margin-bottom: 0.5cm;
+  line-height: 1.5;
+}
+
+/* ---------------- Folha de rosto ---------------- */
+
+.fr-topo p { text-indent: 0; margin: 0; font-weight: bold; }
+
+.fr-ru { font-size: 11pt; }
+
+.folha-rosto .capa-titulo { font-size: 16pt; }
+
+.fr-titulo { margin-top: 2.5cm; }
+
+.fr-natureza {
+  text-align: justify;
+  margin: 2.5cm 0 0 7cm;
+}
+
+.fr-natureza p { text-indent: 0; margin: 0 0 0.8em 0; }
+
+.fr-professor { text-align: right; }
+
+/* ---------------- Sumário ---------------- */
+
+.sumario {
+  text-align: left;
+  text-indent: 0;
+  margin-top: 0.5em;
+}
+
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  font-size: 11.5pt;
+  line-height: 1.35;
+  margin-bottom: 0.12em;
+}
+
+.toc-n1 { font-weight: bold; text-transform: uppercase; }
+
+.toc-n2 { padding-left: 1.25cm; }
+
+.toc-texto { white-space: nowrap; }
+
+.toc-pontos {
+  flex: 1;
+  border-bottom: 1px dotted #000;
+  margin: 0 4px 3px 4px;
+}
+
+.toc-pagina { min-width: 2ch; text-align: right; }
+
+/* ---------------- Referências (NBR 6023) ---------------- */
+
+.referencias p {
+  line-height: 1.15;
+  text-indent: 0;
+  text-align: left;
+  margin: 0 0 12pt 0;
 }

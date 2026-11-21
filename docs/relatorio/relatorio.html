@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Raizes do Nordeste - API multicanal</title>
 <style>
-/* Estilo de impressão inspirado nas normas ABNT para trabalho acadêmico. */
+/* Estilo de impressão conforme NBR 14724 (margens 3/2/2/3, Times 12, espaço 1,5). */
 
 @page {
   size: A4;
@@ -56,8 +56,6 @@ h3 {
   page-break-after: avoid;
 }
 
-strong { font-weight: bold; }
-
 ul, ol {
   margin: 0 0 0.8em 0;
   padding-left: 1.5cm;
@@ -81,10 +79,7 @@ th, td {
   text-align: left;
 }
 
-th {
-  background: #eeeeee;
-  font-weight: bold;
-}
+th { background: #eeeeee; font-weight: bold; }
 
 tr { page-break-inside: avoid; }
 
@@ -113,93 +108,151 @@ pre code { background: none; padding: 0; }
 img {
   display: block;
   max-width: 100%;
-  max-height: 21cm;
+  max-height: 20cm;
   margin: 0.6em auto 0.3em auto;
   page-break-inside: avoid;
 }
 
-.page-break {
-  page-break-after: always;
-}
+.page-break { page-break-after: always; }
 
-.esquerda {
-  text-align: left;
-  text-indent: 0;
-}
+.figura-api { max-height: 13.5cm; }
 
-.sumario {
-  text-align: left;
-  text-indent: 0;
-  line-height: 1.9;
-}
+.esquerda { text-align: left; text-indent: 0; }
 
 /* ---------------- Capa ---------------- */
 
-.capa {
-  height: 24.5cm;
+.capa,
+.folha-rosto {
+  height: 24.4cm;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
 }
 
-.capa-instituicao {
-  font-size: 12pt;
+.capa-topo p {
+  text-indent: 0;
   font-weight: bold;
-  line-height: 1.6;
-  margin-top: 1.5cm;
+  margin: 0;
+  line-height: 1.5;
 }
 
-.capa-titulo h1 {
+.capa-meio p { text-indent: 0; margin: 0 0 0.2em 0; }
+
+.capa-autor { margin-top: 3cm !important; font-weight: bold; }
+
+.capa-ru { font-size: 11pt; margin-bottom: 3cm !important; }
+
+.capa-titulo {
   page-break-before: avoid;
   text-align: center;
   font-size: 20pt;
-  margin: 0 0 0.6cm 0;
-  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 0.5cm 0;
+  letter-spacing: 0.04em;
 }
 
-.capa-titulo h2 {
+.capa-subtitulo {
   text-align: center;
   font-size: 12pt;
   font-weight: normal;
   margin: 0 auto;
   max-width: 14cm;
   line-height: 1.4;
+  page-break-before: avoid;
 }
 
-.capa-autor {
-  font-size: 12pt;
-  line-height: 1.8;
-}
-
-.capa-rodape {
-  font-size: 12pt;
+.capa-base p {
+  text-indent: 0;
+  margin: 0;
   font-weight: bold;
-  margin-bottom: 0.5cm;
+  line-height: 1.5;
+}
+
+/* ---------------- Folha de rosto ---------------- */
+
+.fr-topo p { text-indent: 0; margin: 0; font-weight: bold; }
+
+.fr-ru { font-size: 11pt; }
+
+.folha-rosto .capa-titulo { font-size: 16pt; }
+
+.fr-titulo { margin-top: 2.5cm; }
+
+.fr-natureza {
+  text-align: justify;
+  margin: 2.5cm 0 0 7cm;
+}
+
+.fr-natureza p { text-indent: 0; margin: 0 0 0.8em 0; }
+
+.fr-professor { text-align: right; }
+
+/* ---------------- Sumário ---------------- */
+
+.sumario {
+  text-align: left;
+  text-indent: 0;
+  margin-top: 0.5em;
+}
+
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  font-size: 11.5pt;
+  line-height: 1.35;
+  margin-bottom: 0.12em;
+}
+
+.toc-n1 { font-weight: bold; text-transform: uppercase; }
+
+.toc-n2 { padding-left: 1.25cm; }
+
+.toc-texto { white-space: nowrap; }
+
+.toc-pontos {
+  flex: 1;
+  border-bottom: 1px dotted #000;
+  margin: 0 4px 3px 4px;
+}
+
+.toc-pagina { min-width: 2ch; text-align: right; }
+
+/* ---------------- Referências (NBR 6023) ---------------- */
+
+.referencias p {
+  line-height: 1.15;
+  text-indent: 0;
+  text-align: left;
+  margin: 0 0 12pt 0;
 }
 
 </style>
 </head>
 <body>
 <div class="capa">
-  <div class="capa-instituicao">
-    <p>PROJETO MULTIDISCIPLINAR &mdash; ELETIVA IV</p>
-    <p>TRILHA BACK-END</p>
+  <div class="capa-topo"><p>CENTRO UNIVERSITÁRIO INTERNACIONAL UNINTER</p></div>
+  <div class="capa-meio">
+    <p class="capa-autor">AGATHA SANTANA SOUZA</p>
+    <p class="capa-ru">RU: 4992316</p>
+    <h1 class="capa-titulo">RAÍZES DO NORDESTE</h1>
+    <h2 class="capa-subtitulo">API REST multicanal para rede de lanchonetes: pedidos, estoque por unidade, fidelização e pagamento desacoplado</h2>
   </div>
-  <div class="capa-titulo">
-    <h1>RA&Iacute;ZES DO NORDESTE</h1>
-    <h2>API REST multicanal para rede de lanchonetes: pedidos, estoque por unidade,
-        fideliza&ccedil;&atilde;o e pagamento desacoplado</h2>
+  <div class="capa-base"><p>JACAREÍ – SÃO PAULO</p><p>2026</p></div>
+</div>
+<div class="page-break"></div>
+<div class="folha-rosto">
+  <div class="fr-topo"><p>AGATHA SANTANA SOUZA</p><p class="fr-ru">RU: 4992316</p></div>
+  <div class="fr-titulo">
+    <h1 class="capa-titulo">RAÍZES DO NORDESTE</h1>
+    <h2 class="capa-subtitulo">API REST multicanal para rede de lanchonetes: pedidos, estoque por unidade, fidelização e pagamento desacoplado</h2>
   </div>
-  <div class="capa-autor">
-    <p>AGATHA SANTANA SOUZA</p>
-    <p>RU: 4992316</p>
-    <p>Curso: ______________________________</p>
-    <p>Polo: ______________________________</p>
+  <div class="fr-natureza">
+    <p>Trabalho apresentado como requisito parcial da disciplina Projeto Multidisciplinar – Eletiva IV (Trilha Back-End), do
+       CENTRO UNIVERSITÁRIO INTERNACIONAL UNINTER, para fins de avaliação da Atividade Prática.</p>
+    <p class="fr-professor">Professor(a) responsável: Prof. Me. Luciane Yanase Kanashiro</p>
   </div>
-  <div class="capa-rodape">
-    <p>2026</p>
-  </div>
+  <div class="capa-base"><p>JACAREÍ – SÃO PAULO</p><p>2026</p></div>
 </div>
 
 <div class="page-break"></div>
@@ -229,36 +282,45 @@ reproduzível por meio de uma coleção Postman com 59 requisições e 25 cenár
 <div class="page-break"></div>
 
 <h1>SUMÁRIO</h1>
-<p class="sumario">
-1. INTRODUÇÃO E OBJETIVOS<br>
-2. ANÁLISE E REQUISITOS<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.1 Contexto do negócio<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.2 Requisitos funcionais<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.3 Requisitos não funcionais<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.4 Multicanalidade como requisito de domínio<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.5 Priorização: entregue, proposto e justificativas<br>
-3. MODELAGEM E ARQUITETURA<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.1 Diagrama de casos de uso<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.2 DER e modelo de dados<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.3 Arquitetura em camadas<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.4 Diagrama de classes e máquina de estados<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.5 Diagrama de sequência do fluxo crítico<br>
-4. API E ENDPOINTS<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.1 Organização por recurso<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.2 Padrão de erro<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.3 Contrato de pedido e o campo canalPedido<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.4 Exemplos de requisição e resposta<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.5 Regras mínimas de contrato<br>
-5. LGPD, PRIVACIDADE E SEGURANÇA<br>
-6. ENTREGA TÉCNICA<br>
-7. PLANO DE TESTES<br>
-8. RESULTADOS OBTIDOS<br>
-9. CONCLUSÃO<br>
-REFERÊNCIAS<br>
-APÊNDICE A — Relação completa de endpoints<br>
-APÊNDICE B — Credenciais do seed<br>
-APÊNDICE C — Comandos de execução
-</p>
+<div class="sumario"><div class="toc-item toc-n1"><span class="toc-texto">1 INTRODUÇÃO E OBJETIVOS</span><span class="toc-pontos"></span><span class="toc-pagina">4</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">2 ANÁLISE E REQUISITOS</span><span class="toc-pontos"></span><span class="toc-pagina">5</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">2.1 Contexto do negócio</span><span class="toc-pontos"></span><span class="toc-pagina">5</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">2.2 Requisitos funcionais</span><span class="toc-pontos"></span><span class="toc-pagina">5</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">2.3 Requisitos não funcionais</span><span class="toc-pontos"></span><span class="toc-pagina">5</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">2.4 Multicanalidade como requisito de domínio</span><span class="toc-pontos"></span><span class="toc-pagina">6</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">2.5 Priorização: entregue, proposto e justificativas</span><span class="toc-pontos"></span><span class="toc-pagina">6</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">3 DIAGRAMAS, MODELAGEM E ARQUITETURA</span><span class="toc-pontos"></span><span class="toc-pagina">7</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">3.1 Diagrama de casos de uso</span><span class="toc-pontos"></span><span class="toc-pagina">7</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">3.2 DER e modelo de dados</span><span class="toc-pontos"></span><span class="toc-pagina">9</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">3.3 Arquitetura em camadas</span><span class="toc-pontos"></span><span class="toc-pagina">10</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">3.4 Diagrama de classes e máquina de estados</span><span class="toc-pontos"></span><span class="toc-pagina">11</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">3.5 Diagrama de sequência do fluxo crítico</span><span class="toc-pontos"></span><span class="toc-pagina">13</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">4 API E ENDPOINTS</span><span class="toc-pontos"></span><span class="toc-pagina">14</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">4.1 Organização por recurso</span><span class="toc-pontos"></span><span class="toc-pagina">14</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">4.2 Padrão de erro</span><span class="toc-pontos"></span><span class="toc-pagina">14</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">4.3 Contrato de pedido e o campo canalPedido</span><span class="toc-pontos"></span><span class="toc-pagina">14</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">4.4 Exemplos de requisição e resposta</span><span class="toc-pontos"></span><span class="toc-pagina">15</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">4.5 Regras mínimas de contrato</span><span class="toc-pontos"></span><span class="toc-pagina">16</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">5 LGPD, PRIVACIDADE E SEGURANÇA</span><span class="toc-pontos"></span><span class="toc-pagina">17</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">5.1 Dados pessoais tratados</span><span class="toc-pontos"></span><span class="toc-pagina">17</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">5.2 Controles implementados</span><span class="toc-pontos"></span><span class="toc-pagina">17</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">5.3 Retenção e eliminação</span><span class="toc-pontos"></span><span class="toc-pagina">17</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">5.4 Evidência de auditoria</span><span class="toc-pontos"></span><span class="toc-pagina">17</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">6 ENTREGA TÉCNICA</span><span class="toc-pontos"></span><span class="toc-pagina">18</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">6.1 Repositório e execução</span><span class="toc-pontos"></span><span class="toc-pagina">18</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">6.2 Documentação da API</span><span class="toc-pontos"></span><span class="toc-pagina">18</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">6.3 Coleção de testes</span><span class="toc-pontos"></span><span class="toc-pagina">19</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">6.4 Modelo de dados e migrations</span><span class="toc-pontos"></span><span class="toc-pagina">19</span></div>
+<div class="toc-item toc-n2"><span class="toc-texto">6.5 Histórico de commits</span><span class="toc-pontos"></span><span class="toc-pagina">19</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">7 PLANO DE TESTES</span><span class="toc-pontos"></span><span class="toc-pagina">20</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">8 RESULTADOS OBTIDOS</span><span class="toc-pontos"></span><span class="toc-pagina">21</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">9 CRITÉRIOS DE ENTREGA E NORMAS ABNT</span><span class="toc-pontos"></span><span class="toc-pagina">22</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">10 CONCLUSÃO</span><span class="toc-pontos"></span><span class="toc-pagina">23</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">REFERÊNCIAS</span><span class="toc-pontos"></span><span class="toc-pagina">24</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">APÊNDICE A — RELAÇÃO COMPLETA DE ENDPOINTS</span><span class="toc-pontos"></span><span class="toc-pagina">25</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">APÊNDICE B — CREDENCIAIS DO SEED</span><span class="toc-pontos"></span><span class="toc-pagina">26</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">APÊNDICE C — COMANDOS DE EXECUÇÃO</span><span class="toc-pontos"></span><span class="toc-pagina">27</span></div>
+<div class="toc-item toc-n1"><span class="toc-texto">APÊNDICE D — CONTRATO POR ENDPOINT (GERADO DO OPENAPI)</span><span class="toc-pontos"></span><span class="toc-pagina">28</span></div></div>
 
 <div class="page-break"></div>
 
@@ -530,7 +592,7 @@ foi guiada por um critério: <strong>o que fecha o fluxo crítico de forma verif
 </table>
 <div class="page-break"></div>
 
-<h1>3 MODELAGEM E ARQUITETURA</h1>
+<h1>3 DIAGRAMAS, MODELAGEM E ARQUITETURA</h1>
 <h2>3.1 Diagrama de casos de uso</h2>
 <p><img alt="Diagrama de casos de uso" src="../diagramas/img/casos-de-uso-1.png"></p>
 <p class="esquerda">Atores: Cliente (App/Web/Totem), Atendente (balcão), Cozinha, Gerente/Administrador e
@@ -1053,6 +1115,9 @@ credenciais de cada perfil.</p>
 <p>A especificação é <strong>gerada a partir do código</strong>, com exemplos de requisição nos schemas de entrada
 e todos os códigos de status declarados por endpoint. Não existe documento paralelo que possa
 divergir da implementação.</p>
+<p><img alt="Swagger UI com os endpoints agrupados por recurso" class="figura-api" src="img/swagger-ui.png"></p>
+<p><em>Figura 6.1 — Swagger UI em execução local: endpoints agrupados por recurso, esquema de autenticação
+BearerAuth e contratos gerados do código.</em></p>
 <h2>6.3 Coleção de testes</h2>
 <p><code>docs/postman/Raizes-API.postman_collection.json</code> — 10 pastas, 59 requisições, com asserções
 (<code>pm.test</code>) e encadeamento de variáveis (<code>accessToken</code>, <code>pedidoId</code>, <code>pagamentoId</code>,
@@ -1174,7 +1239,58 @@ populado pelo seed:</p>
 </ul>
 <div class="page-break"></div>
 
-<h1>9 CONCLUSÃO</h1>
+<h1>9 CRITÉRIOS DE ENTREGA E NORMAS ABNT</h1>
+<p>O trabalho é entregue em <strong>arquivo único PDF</strong> (<code>4992316_Projeto_Back_End.pdf</code>), nomeado com o
+RU seguido de <em>Projeto Back End</em>, conforme o roteiro. A formatação segue a NBR 14724 para
+apresentação de trabalhos acadêmicos e a NBR 6023 para referências:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Aplicação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Papel e margens</td>
+<td>A4; margens de 3 cm (superior e esquerda) e 2 cm (inferior e direita)</td>
+</tr>
+<tr>
+<td>Fonte</td>
+<td>Times New Roman, corpo 12; citações longas e notas em 10; legendas em 10</td>
+</tr>
+<tr>
+<td>Espaçamento</td>
+<td>1,5 no corpo do texto; simples nas referências, separadas por linha em branco</td>
+</tr>
+<tr>
+<td>Paginação</td>
+<td>algarismos arábicos no canto superior direito, contados a partir da folha de rosto e exibidos a partir da introdução</td>
+</tr>
+<tr>
+<td>Estrutura</td>
+<td>capa, folha de rosto, resumo, sumário, seções numeradas, referências e apêndices</td>
+</tr>
+<tr>
+<td>Sumário</td>
+<td>títulos numerados com indicação das páginas correspondentes</td>
+</tr>
+<tr>
+<td>Ilustrações</td>
+<td>figuras de diagramas com legenda e referência no texto</td>
+</tr>
+</tbody>
+</table>
+<p>Além do PDF, a entrega compreende o <strong>repositório público</strong> com código-fonte, histórico de
+commits, README de execução, migrações e seed, a <strong>documentação OpenAPI</strong> gerada pela própria
+aplicação, a <strong>coleção Postman</strong> com os cenários de teste e o <strong>DER</strong> em imagem e em código
+Mermaid. Todos os links constam no README do repositório, conforme exigido no item 7.3 do roteiro.</p>
+<p>O texto foi redigido com postura profissional: cada decisão técnica é justificada, os limites da
+versão atual estão declarados de forma explícita e os números apresentados foram medidos em
+execução real da API, não estimados.</p>
+<div class="page-break"></div>
+
+<h1>10 CONCLUSÃO</h1>
 <p>O trabalho entregou o back-end completo do fluxo crítico proposto: o pedido nasce com canal
 obrigatório, o servidor calcula preço e total, reserva estoque da unidade correta, submete o
 pagamento a um gateway simulado com garantia de idempotência e só então baixa o estoque, credita
@@ -1201,7 +1317,7 @@ uma demonstração técnica: roda localmente em três comandos, tem documentaç�
 reproduzíveis e decisões justificadas.</p>
 <div class="page-break"></div>
 
-<h1>REFERÊNCIAS</h1>
+<h1>REFERÊNCIAS</h1><div class="referencias">
 <p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 14724</strong>: informação e documentação — trabalhos
 acadêmicos — apresentação. Rio de Janeiro: ABNT, 2011.</p>
 <p>ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 6023</strong>: informação e documentação — referências —
@@ -1218,7 +1334,7 @@ https://owasp.org/API-Security/. Acesso em: 2026.</p>
 https://docs.sqlalchemy.org/en/20/. Acesso em: 2026.</p>
 <div class="page-break"></div>
 
-<h1>APÊNDICE A — RELAÇÃO COMPLETA DE ENDPOINTS</h1>
+</div><h1>APÊNDICE A — RELAÇÃO COMPLETA DE ENDPOINTS</h1>
 <table>
 <thead>
 <tr>
@@ -1493,5 +1609,293 @@ uvicorn app.main:app --reload --port 8000
 <p>Acessos: <code>http://localhost:8000/docs</code> (Swagger), <code>http://localhost:8000/redoc</code> (ReDoc),
 <code>http://localhost:8000/health</code> (saúde). Testes: importar
 <code>docs/postman/Raizes-API.postman_collection.json</code> no Postman e executar pelo Collection Runner.</p>
+<h1>APÊNDICE D — CONTRATO POR ENDPOINT (GERADO DO OPENAPI)</h1>
+<p>Tabela extraída automaticamente da especificação OpenAPI servida pela própria aplicação, o que garante correspondência exata entre documentação e implementação. Parâmetros marcados com asterisco são obrigatórios.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Rota</th>
+<th>Auth</th>
+<th>Parâmetros</th>
+<th>Corpo</th>
+<th>Respostas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/auditoria</code></td>
+<td>JWT</td>
+<td><code>acao</code> (query), <code>entidade</code> (query), <code>entidadeId</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 403, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/login</code></td>
+<td>público</td>
+<td>—</td>
+<td>LoginRequest</td>
+<td>200, 401, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/logout</code></td>
+<td>público</td>
+<td>—</td>
+<td>RefreshRequest</td>
+<td>204, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/auth/me</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>—</td>
+<td>200, 401</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/auth/refresh</code></td>
+<td>público</td>
+<td>—</td>
+<td>RefreshRequest</td>
+<td>200, 401, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/extrato</code></td>
+<td>JWT</td>
+<td><code>clienteId</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/regras</code></td>
+<td>público</td>
+<td>—</td>
+<td>—</td>
+<td>200</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/fidelidade/saldo</code></td>
+<td>JWT</td>
+<td><code>clienteId</code> (query)</td>
+<td>—</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/health</code></td>
+<td>público</td>
+<td>—</td>
+<td>—</td>
+<td>200</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/pagamentos</code></td>
+<td>JWT</td>
+<td><code>Idempotency-Key</code> (header)*</td>
+<td>PagamentoCreate</td>
+<td>200, 201, 403, 404, 409, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pagamentos/{pagamento_id}</code></td>
+<td>JWT</td>
+<td><code>pagamento_id</code> (path)*</td>
+<td>—</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/pedidos</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>PedidoCreate</td>
+<td>201, 404, 409, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos</code></td>
+<td>JWT</td>
+<td><code>canalPedido</code> (query), <code>status</code> (query), <code>unidadeId</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos/{pedido_id}</code></td>
+<td>JWT</td>
+<td><code>pedido_id</code> (path)*</td>
+<td>—</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/pedidos/{pedido_id}/pagamentos</code></td>
+<td>JWT</td>
+<td><code>pedido_id</code> (path)*</td>
+<td>—</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/pedidos/{pedido_id}/status</code></td>
+<td>JWT</td>
+<td><code>pedido_id</code> (path)*</td>
+<td>PedidoStatusUpdate</td>
+<td>200, 403, 404, 409, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/produtos</code></td>
+<td>JWT</td>
+<td><code>categoria</code> (query), <code>ativo</code> (query), <code>q</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/produtos</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>ProdutoCreate</td>
+<td>201, 403, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/produtos/{produto_id}</code></td>
+<td>JWT</td>
+<td><code>produto_id</code> (path)*</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/produtos/{produto_id}</code></td>
+<td>JWT</td>
+<td><code>produto_id</code> (path)*</td>
+<td>ProdutoUpdate</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/produtos/{produto_id}</code></td>
+<td>JWT</td>
+<td><code>produto_id</code> (path)*</td>
+<td>—</td>
+<td>204, 403, 404, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades</code></td>
+<td>JWT</td>
+<td><code>somenteAtivas</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/unidades</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>UnidadeCreate</td>
+<td>201, 403, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{unidade_id}</code></td>
+<td>JWT</td>
+<td><code>unidade_id</code> (path)*</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{unidade_id}/cardapio</code></td>
+<td>JWT</td>
+<td><code>unidade_id</code> (path)*, <code>categoria</code> (query), <code>apenasDisponiveis</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/unidades/{unidade_id}/cardapio/{produto_id}</code></td>
+<td>JWT</td>
+<td><code>unidade_id</code> (path)<em>, <code>produto_id</code> (path)</em></td>
+<td>CardapioItemUpdate</td>
+<td>200, 403, 404, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/unidades/{unidade_id}/estoque</code></td>
+<td>JWT</td>
+<td><code>unidade_id</code> (path)*, <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 403, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/unidades/{unidade_id}/estoque/movimentacoes</code></td>
+<td>JWT</td>
+<td><code>unidade_id</code> (path)*</td>
+<td>MovimentacaoCreate</td>
+<td>201, 403, 404, 409, 422</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/usuarios</code></td>
+<td>público</td>
+<td>—</td>
+<td>UsuarioCreate</td>
+<td>201, 409, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios</code></td>
+<td>JWT</td>
+<td><code>perfil</code> (query), <code>ativo</code> (query), <code>page</code> (query), <code>limit</code> (query)</td>
+<td>—</td>
+<td>200, 403, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>—</td>
+<td>200</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>—</td>
+<td>204</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/usuarios/me</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>UsuarioUpdateMe</td>
+<td>200, 422</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/usuarios/me/dados</code></td>
+<td>JWT</td>
+<td>—</td>
+<td>—</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

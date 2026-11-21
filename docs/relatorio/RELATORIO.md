@@ -34,36 +34,7 @@ reproduzível por meio de uma coleção Postman com 59 requisições e 25 cenár
 
 # SUMÁRIO
 
-<p class="sumario">
-1. INTRODUÇÃO E OBJETIVOS<br>
-2. ANÁLISE E REQUISITOS<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.1 Contexto do negócio<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.2 Requisitos funcionais<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.3 Requisitos não funcionais<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.4 Multicanalidade como requisito de domínio<br>
-&nbsp;&nbsp;&nbsp;&nbsp;2.5 Priorização: entregue, proposto e justificativas<br>
-3. MODELAGEM E ARQUITETURA<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.1 Diagrama de casos de uso<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.2 DER e modelo de dados<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.3 Arquitetura em camadas<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.4 Diagrama de classes e máquina de estados<br>
-&nbsp;&nbsp;&nbsp;&nbsp;3.5 Diagrama de sequência do fluxo crítico<br>
-4. API E ENDPOINTS<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.1 Organização por recurso<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.2 Padrão de erro<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.3 Contrato de pedido e o campo canalPedido<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.4 Exemplos de requisição e resposta<br>
-&nbsp;&nbsp;&nbsp;&nbsp;4.5 Regras mínimas de contrato<br>
-5. LGPD, PRIVACIDADE E SEGURANÇA<br>
-6. ENTREGA TÉCNICA<br>
-7. PLANO DE TESTES<br>
-8. RESULTADOS OBTIDOS<br>
-9. CONCLUSÃO<br>
-REFERÊNCIAS<br>
-APÊNDICE A — Relação completa de endpoints<br>
-APÊNDICE B — Credenciais do seed<br>
-APÊNDICE C — Comandos de execução
-</p>
+<!--SUMARIO-->
 
 <div class="page-break"></div>
 
@@ -178,7 +149,7 @@ foi guiada por um critério: **o que fecha o fluxo crítico de forma verificáve
 
 <div class="page-break"></div>
 
-# 3 MODELAGEM E ARQUITETURA
+# 3 DIAGRAMAS, MODELAGEM E ARQUITETURA
 
 ## 3.1 Diagrama de casos de uso
 
@@ -527,6 +498,11 @@ A especificação é **gerada a partir do código**, com exemplos de requisiçã
 e todos os códigos de status declarados por endpoint. Não existe documento paralelo que possa
 divergir da implementação.
 
+![Swagger UI com os endpoints agrupados por recurso](img/swagger-ui.png){ .figura-api }
+
+*Figura 6.1 — Swagger UI em execução local: endpoints agrupados por recurso, esquema de autenticação
+BearerAuth e contratos gerados do código.*
+
 ## 6.3 Coleção de testes
 
 `docs/postman/Raizes-API.postman_collection.json` — 10 pastas, 59 requisições, com asserções
@@ -604,7 +580,34 @@ Comportamentos verificados que traduzem regra de negócio, e não apenas CRUD:
 
 <div class="page-break"></div>
 
-# 9 CONCLUSÃO
+# 9 CRITÉRIOS DE ENTREGA E NORMAS ABNT
+
+O trabalho é entregue em **arquivo único PDF** (`4992316_Projeto_Back_End.pdf`), nomeado com o
+RU seguido de *Projeto Back End*, conforme o roteiro. A formatação segue a NBR 14724 para
+apresentação de trabalhos acadêmicos e a NBR 6023 para referências:
+
+| Elemento | Aplicação |
+|---|---|
+| Papel e margens | A4; margens de 3 cm (superior e esquerda) e 2 cm (inferior e direita) |
+| Fonte | Times New Roman, corpo 12; citações longas e notas em 10; legendas em 10 |
+| Espaçamento | 1,5 no corpo do texto; simples nas referências, separadas por linha em branco |
+| Paginação | algarismos arábicos no canto superior direito, contados a partir da folha de rosto e exibidos a partir da introdução |
+| Estrutura | capa, folha de rosto, resumo, sumário, seções numeradas, referências e apêndices |
+| Sumário | títulos numerados com indicação das páginas correspondentes |
+| Ilustrações | figuras de diagramas com legenda e referência no texto |
+
+Além do PDF, a entrega compreende o **repositório público** com código-fonte, histórico de
+commits, README de execução, migrações e seed, a **documentação OpenAPI** gerada pela própria
+aplicação, a **coleção Postman** com os cenários de teste e o **DER** em imagem e em código
+Mermaid. Todos os links constam no README do repositório, conforme exigido no item 7.3 do roteiro.
+
+O texto foi redigido com postura profissional: cada decisão técnica é justificada, os limites da
+versão atual estão declarados de forma explícita e os números apresentados foram medidos em
+execução real da API, não estimados.
+
+<div class="page-break"></div>
+
+# 10 CONCLUSÃO
 
 O trabalho entregou o back-end completo do fluxo crítico proposto: o pedido nasce com canal
 obrigatório, o servidor calcula preço e total, reserva estoque da unidade correta, submete o
@@ -745,3 +748,5 @@ uvicorn app.main:app --reload --port 8000
 Acessos: `http://localhost:8000/docs` (Swagger), `http://localhost:8000/redoc` (ReDoc),
 `http://localhost:8000/health` (saúde). Testes: importar
 `docs/postman/Raizes-API.postman_collection.json` no Postman e executar pelo Collection Runner.
+
+<!--APENDICE-D-->

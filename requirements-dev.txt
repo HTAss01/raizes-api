@@ -1,0 +1,4 @@
+# Dependências usadas apenas para gerar a documentação
+# (a API em si roda com requirements.txt)
+markdown==3.11.3
+pymupdf==2.1
