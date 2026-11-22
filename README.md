@@ -4,6 +4,9 @@
 
 Atividade Prática — **Projeto Multidisciplinar (Eletiva IV)** — Trilha **Back-End**.
 
+**Repositório:** https://github.com/HTAss01/raizes-api
+**Relatório (PDF):** `docs/relatorio/4992316_Projeto_Back_End.pdf`
+
 ---
 
 ## Sobre o projeto
@@ -92,7 +95,9 @@ Dependência aponta sempre para dentro: `api → application → domain`,
 
 | Artefato | Caminho |
 |---|---|
-| DER (entidade-relacionamento) | `docs/diagramas/der.md` |
+| Relatório final (PDF, ABNT) | `docs/relatorio/4992316_Projeto_Back_End.pdf` |
+| Texto do relatório | `docs/relatorio/RELATORIO.md` |
+| DER (entidade-relacionamento) | `docs/diagramas/der.md` (+ PNG/SVG em `docs/diagramas/img/`) |
 | Casos de uso + descrição do fluxo crítico | `docs/diagramas/casos-de-uso.md` |
 | Diagrama de classes e máquina de estados | `docs/diagramas/classes.md` |
 | Sequência Pedido → Pagamento → Status | `docs/diagramas/sequencia-pedido-pagamento.md` |

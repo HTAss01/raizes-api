@@ -1,88 +1,53 @@
 # Diagrama de Casos de Uso
 
+Para manter legibilidade no PDF, os casos de uso estão agrupados por área de funcionalidade
+(as ligações ator → área indicam quem pode executar o quê). A lista completa está na tabela
+abaixo do diagrama.
+
 ```mermaid
 flowchart LR
-    cliente([Cliente\nApp / Web / Totem])
-    atendente([Atendente\nBalcão])
-    cozinha([Cozinha])
-    gestor([Gerente / Administrador])
-    gateway([Gateway de Pagamento\nMock])
+    C([Cliente<br/>App / Web / Totem])
+    AT([Atendente<br/>Balcão])
+    CZ([Cozinha])
+    G([Gerente /<br/>Administrador])
+    GW([Gateway de<br/>Pagamento mock])
 
-    subgraph SAC["Autenticação e conta"]
-        uc1(Realizar login)
-        uc2(Consultar próprios dados)
-        uc3(Exportar dados pessoais)
-        uc4(Anonimizar conta)
-        uc5(Cadastrar-se)
-    end
+    A1["Conta e acesso<br/>login · refresh · cadastro<br/>dados pessoais · LGPD"]
+    A2["Pedidos<br/>realizar · consultar<br/>cancelar · acompanhar status"]
+    A3["Pagamento<br/>solicitar cobrança<br/>aprovar/recusar (mock)"]
+    A4["Operação da unidade<br/>cardápio · estoque<br/>produtos · unidades"]
+    A5["Fidelidade<br/>saldo · extrato<br/>resgate"]
+    A6["Governança<br/>auditoria de<br/>ações sensíveis"]
 
-    subgraph PED["Pedidos"]
-        uc6(Realizar pedido)
-        uc7(Consultar pedido)
-        uc8(Acompanhar status)
-        uc9(Cancelar pedido)
-        uc10(Criar pedido no balcão)
-    end
-
-    subgraph PAG["Pagamento"]
-        uc11(Solicitar pagamento)
-        uc12(Processar pagamento - mock)
-    end
-
-    subgraph OP["Operação por unidade"]
-        uc13(Consultar cardápio)
-        uc14(Consultar estoque)
-        uc15(Movimentar estoque)
-        uc16(Gerenciar produtos)
-        uc17(Ajustar cardápio da unidade)
-        uc18(Cadastrar unidade)
-    end
-
-    subgraph FID["Fidelização"]
-        uc19(Consultar saldo e extrato)
-        uc20(Resgatar pontos no pedido)
-    end
-
-    subgraph AUD["Governança"]
-        uc21(Consultar auditoria)
-    end
-
-    cliente --> uc1
-    cliente --> uc5
-    cliente --> uc6
-    cliente --> uc7
-    cliente --> uc8
-    cliente --> uc9
-    cliente --> uc13
-    cliente --> uc19
-    cliente --> uc20
-    cliente --> uc2
-    cliente --> uc3
-    cliente --> uc4
-    cliente --> uc11
-
-    atendente --> uc1
-    atendente --> uc10
-    atendente --> uc8
-    atendente --> uc13
-    atendente --> uc15
-
-    cozinha --> uc1
-    cozinha --> uc8
-    cozinha --> uc14
-
-    gestor --> uc1
-    gestor --> uc14
-    gestor --> uc15
-    gestor --> uc16
-    gestor --> uc17
-    gestor --> uc18
-    gestor --> uc19
-    gestor --> uc21
-
-    uc11 --> uc12
-    uc12 --> gateway
+    C --> A1
+    C --> A2
+    C --> A3
+    C --> A4
+    C --> A5
+    AT --> A1
+    AT --> A2
+    AT --> A4
+    CZ --> A1
+    CZ --> A2
+    CZ --> A4
+    G --> A1
+    G --> A2
+    G --> A4
+    G --> A5
+    G --> A6
+    A3 --> GW
 ```
+
+## Casos de uso por área
+
+| Área | Casos de uso | Atores |
+|---|---|---|
+| Conta e acesso | realizar login; renovar sessão; encerrar sessão; cadastrar-se; consultar dados pessoais; exportar dados (portabilidade); anonimizar conta | Cliente, Atendente, Cozinha, Gerente/Admin |
+| Pedidos | realizar pedido; criar pedido no balcão; consultar pedido; acompanhar status; cancelar pedido | Cliente, Atendente, Cozinha, Gerente/Admin |
+| Pagamento | solicitar pagamento; processar pagamento (mock); consultar pagamento | Cliente, Gateway mock |
+| Operação da unidade | consultar cardápio; ajustar cardápio da unidade; consultar estoque; movimentar estoque; gerenciar produtos; cadastrar unidade | Cliente (consulta), Atendente, Cozinha, Gerente/Admin |
+| Fidelidade | consultar saldo; consultar extrato; resgatar pontos no pedido | Cliente, Gerente/Admin |
+| Governança | consultar log de auditoria | Gerente/Admin (ADMIN) |
 
 ## UC 01 — Realizar Pedido + Solicitar Pagamento (fluxo crítico)
 
