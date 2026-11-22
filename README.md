@@ -174,8 +174,21 @@ Depois: `alembic upgrade head` e `python -m app.infrastructure.db.seed`.
 A especificação é **gerada a partir do código** (schemas Pydantic + anotações dos routers),
 portanto não existe contrato escrito à mão que possa divergir da implementação.
 
-Para testar endpoints protegidos no Swagger: execute `POST /auth/login`, copie o `accessToken`,
-clique em **Authorize** e cole o token (o esquema é `BearerAuth`).
+### Autenticar no Swagger
+
+1. Execute `POST /auth/login` com um dos usuários do seed.
+2. Copie **apenas o valor** de `accessToken` (começa com `eyJ`; ~240 caracteres).
+3. Clique em **Authorize** (canto superior direito), cole o valor, confirme em **Authorize** e
+   feche a caixa em **Close**.
+4. Os cadeados dos endpoints protegidos passam a aparecer fechados.
+
+Detalhes que evitam erro comum:
+
+- o bloco **Parameters** não lista o token: Bearer é esquema de segurança, representado pelo cadeado;
+- não cole o `refreshToken` no Authorize — ele só é aceito em `POST /auth/refresh`;
+- não digite `Bearer` junto do token; o Swagger acrescenta o prefixo;
+- o token expira em 60 minutos; depois disso, refaça o login;
+- para testar outro perfil, faça login com outro usuário e repita o passo 3.
 
 ### Endpoints por recurso
 
@@ -278,14 +291,61 @@ seed existem para que a regra acima seja implementada sem alterar o DER.
 - **Coleção:** `docs/postman/Raizes-API.postman_collection.json` (10 pastas, 59 requisições)
 - **Environment:** `docs/postman/Raizes-API.postman_environment.json`
 - **Plano com os 25 cenários:** `docs/PLANO_DE_TESTES.md`
+- **Roteiro passo a passo (manual e automatizado):** `docs/ROTEIRO_DE_VALIDACAO.md`
 
-Como executar:
+### Preparar o banco
+
+Os cenários de cadastro e de estoque dependem de dados limpos. Antes de uma bateria completa:
+
+```bash
+alembic upgrade head
+python -m app.infrastructure.db.seed
+```
+
+Se já houver `raizes.db` de uma execução anterior, apague o arquivo (e os `.db-wal` / `.db-shm`)
+antes dos dois comandos.
+
+### Teste automatizado (recomendado)
 
 1. Suba a API em `http://localhost:8000` com banco migrado e seed aplicado.
-2. Importe coleção + environment no Postman.
-3. **Collection Runner** → Run. As variáveis (`accessToken`, `pedidoId`, `pagamentoId`,
-   `idempotencyKey`) são encadeadas pelos scripts de teste.
-4. Rode em banco recém-semeado (a pasta de LGPD cadastra e depois anonimiza um cliente).
+2. Importe coleção + environment no Postman e selecione o environment `Raizes API - Local`.
+3. **Collection Runner** → Run, com as 10 pastas marcadas.
+4. Resultado esperado: **59 requisições, 0 falhas**.
+
+Ordem das pastas (é a dependência entre elas):
+
+```
+00 Autenticação → 01 Unidades e cardápio → 02 Produtos → 03 Pedidos
+→ 04 Pagamentos → 05 Usuários e LGPD → 06 Fidelidade → 07 Auditoria
+→ 08 Direitos do titular → 09 Erros e saúde
+```
+
+As variáveis (`accessToken`, `pedidoId`, `pagamentoId`, `idempotencyKey`) são encadeadas pelas
+próprias requisições; não é preciso preencher nada à mão.
+
+### Teste manual no Swagger
+
+O roteiro completo está em `docs/ROTEIRO_DE_VALIDACAO.md`. Ordem sugerida:
+
+1. login do cliente e **Authorize** (ver seção anterior);
+2. `GET /auth/me` (200) e `GET /usuarios` (403, autorização por perfil);
+3. `GET /unidades` e `GET /unidades/{id}/cardapio`;
+4. `GET /unidades/{id}/estoque` com gerente (200) e com cliente (403);
+5. `POST /pedidos` com `canalPedido: TOTEM` (201, total calculado);
+6. `POST /pagamentos` com `Idempotency-Key` (201, pedido `PAGO`) e repetição da mesma chave (200);
+7. `PATCH /pedidos/{id}/status` com cozinha e atendente; transição proibida devolve 409;
+8. `GET /fidelidade/saldo`, `GET /usuarios/me/dados` e `GET /auditoria` (token de ADMIN).
+
+### Problemas comuns
+
+| Sintoma | Causa provável | Solução |
+|---|---|---|
+| `401 NAO_AUTENTICADO` em endpoints protegidos | token não aplicado no Authorize, ou expirado | refazer login e repetir o passo 3 do Authorize |
+| `401 TOKEN_INVALIDO` | foi colado o `refreshToken` em vez do `accessToken` | copiar o campo `accessToken` |
+| `409 EMAIL_JA_CADASTRADO` no cenário de cadastro | coleção executada duas vezes no mesmo banco | apagar `raizes.db*`, migrar, semear e rodar de novo |
+| `403 SEM_PERMISSAO` em estoque ou produtos | token de CLIENTE | logar como gerente ou admin |
+| `409 ESTOQUE_INSUFICIENTE` em pedido pequeno | estoque consumido por execução anterior | resetar o banco |
+| `422` com `field: canalPedido` | campo ausente no corpo do pedido | incluir `canalPedido` |
 
 Cobertura: login (200), sem token (401), perfil sem permissão (403), validação (422),
 recurso inexistente (404), estoque insuficiente (409), transição inválida (409),
