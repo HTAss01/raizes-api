@@ -8,11 +8,12 @@ class UsuarioCreate(CamelModel):
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "nome": "Maria Souza",
-                "email": "maria.souza@exemplo.com",
+                "nome": "João Gerente",
+                "email": "joao.gerente@raizes.com.br",
                 "senha": "Senha@123",
-                "telefone": "81 99999-1234",
-                "consentimentoLgpd": True,
+                "telefone": "81 98888-0000",
+                "perfil": "GERENTE",
+                "consentimentoLgpd": False,
             }
         }
     )
@@ -21,6 +22,13 @@ class UsuarioCreate(CamelModel):
     email: EmailStr
     senha: str = Field(min_length=8, max_length=72, description="Mínimo 8 caracteres, com letras e números")
     telefone: str | None = Field(default=None, max_length=20)
+    perfil: PerfilUsuario = Field(
+        description=(
+            "Perfil do usuário a ser criado: ADMIN, GERENTE, ATENDENTE, COZINHA ou CLIENTE. "
+            "Obrigatório; somente ADMIN pode cadastrar."
+        ),
+        examples=["GERENTE"],
+    )
     consentimento_lgpd: bool = Field(
         description=(
             "Consentimento explícito para tratamento de dados pessoais e participação "

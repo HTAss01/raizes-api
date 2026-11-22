@@ -43,7 +43,7 @@ Conferências rápidas:
 3. Clicar nos três pontos da coleção → **Run collection**.
 4. Deixar **todas** as 10 pastas marcadas e executar.
 
-**Critério de aceite:** 59 requisições executadas, **0 falhas**. Cada requisição tem sua própria
+**Critério de aceite:** 61 requisições executadas, **0 falhas**. Cada requisição tem sua própria
 asserção (`pm.test`), então uma falha aparece com o nome do teste e o status recebido.
 
 Se aparecer falha, consultar a seção “Problemas comuns” no fim deste roteiro.
@@ -55,6 +55,12 @@ Se aparecer falha, consultar a seção “Problemas comuns” no fim deste rotei
 No Swagger, os endpoints protegidos exigem token. O fluxo é sempre: **fazer login → copiar
 `accessToken` → clicar em Authorize → colar o token**. Para trocar de perfil, refaça o login e
 substitua o token.
+
+### B.0 Primeiro acesso como ADMIN
+
+O primeiro administrador vem do seed (`admin@raizes.com.br` / `Senha@123`); não há endpoint
+público para criar contas. Com o token do ADMIN no Authorize, use `POST /usuarios` informando o
+`perfil` para criar gerente, atendente, cozinha ou outro admin.
 
 ### B.1 Autenticação e autorização
 
@@ -131,7 +137,7 @@ Com token de **cliente**:
 
 - [ ] `GET /health` responde `ok`
 - [ ] `/docs` abre com 34 operações e o Authorize funciona
-- [ ] Coleção completa no Runner: **59 requisições, 0 falhas**
+- [ ] Coleção completa no Runner: **61 requisições, 0 falhas**
 - [ ] Pedido criado com canal, reserva reduzindo estoque e pagamento mudando status para `PAGO`
 - [ ] Recusa de pagamento cancela o pedido e libera a reserva
 - [ ] `401`, `403`, `404`, `409` e `422` aparecem com o JSON padronizado (com `requestId`)

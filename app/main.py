@@ -32,7 +32,7 @@ TAGS_METADATA = [
     {"name": "Produtos", "description": "Catálogo de produtos da rede (CRUD com exclusão lógica)."},
     {
         "name": "Usuários",
-        "description": "Autocadastro de cliente com consentimento LGPD e dados do titular.",
+        "description": "Cadastro de usuários por ADMIN (com perfil) e dados do titular.",
     },
     {
         "name": "Pedidos",

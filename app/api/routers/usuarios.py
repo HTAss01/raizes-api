@@ -2,7 +2,13 @@ from fastapi import APIRouter, Depends, Query, Request, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.contexto import ip_origem, request_id
-from app.api.deps import Paginacao, get_current_user, meta_paginacao, paginacao, require_perfis
+from app.api.deps import (
+    Paginacao,
+    get_current_user,
+    meta_paginacao,
+    paginacao,
+    require_perfis,
+)
 from app.api.schemas.base import MetaPaginacao, Pagina
 from app.api.schemas.usuarios import (
     ExportacaoDadosOut,
@@ -27,13 +33,18 @@ GESTAO = require_perfis(PerfilUsuario.ADMIN, PerfilUsuario.GERENTE)
     "",
     response_model=UsuarioOut,
     status_code=status.HTTP_201_CREATED,
-    summary="Cadastra um cliente (autocadastro público)",
-    responses={409: {"description": "E-mail já cadastrado"}},
+    summary="Cadastra usuário da rede com o perfil informado (somente ADMIN)",
+    responses={
+        401: {"description": "Token ausente ou inválido"},
+        403: {"description": "Perfil sem permissão"},
+        409: {"description": "E-mail já cadastrado"},
+    },
 )
 def cadastrar(
     dados: UsuarioCreate,
     request: Request,
     db: Session = Depends(get_db),
+    usuario_atual: Usuario = Depends(require_perfis(PerfilUsuario.ADMIN)),
 ) -> UsuarioOut:
     usuario = usuario_service.cadastrar(
         db,
@@ -42,6 +53,7 @@ def cadastrar(
         senha=dados.senha,
         telefone=dados.telefone,
         consentimento_lgpd=dados.consentimento_lgpd,
+        perfil=dados.perfil,
         request_id=request_id(request),
         ip=ip_origem(request),
     )

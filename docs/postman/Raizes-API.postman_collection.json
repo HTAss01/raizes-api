@@ -1930,7 +1930,7 @@
       "name": "05 - Usuarios e LGPD",
       "item": [
         {
-          "name": "T18 - Cadastro de cliente",
+          "name": "T18 - Cadastro de cliente (ADMIN)",
           "request": {
             "method": "POST",
             "header": [
@@ -1941,6 +1941,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
               }
             ],
             "url": {
@@ -1954,14 +1958,14 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Joana Bezerra\",\n  \"email\": \"joana.teste@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"telefone\": \"81 97777-0000\",\n  \"consentimentoLgpd\": true\n}",
+              "raw": "{\n  \"nome\": \"Joana Bezerra\",\n  \"email\": \"joana.teste@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"telefone\": \"81 97777-0000\",\n  \"perfil\": \"CLIENTE\",\n  \"consentimentoLgpd\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Autocadastro com consentimento LGPD. Rodar apenas com banco recém-semeado (e-mail único)."
+            "description": "Cadastro protegido: somente ADMIN cria usuários, com perfil obrigatório."
           },
           "event": [
             {
@@ -1970,9 +1974,60 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"status 201\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"perfil sempre CLIENTE\", () => pm.expect(pm.response.json().perfil).to.eql(\"CLIENTE\"));",
+                  "pm.test(\"perfil informado pelo ADMIN\", () => pm.expect(pm.response.json().perfil).to.eql(\"CLIENTE\"));",
                   "pm.test(\"consentimento registrado\", () => pm.expect(pm.response.json().consentimentoEm).to.not.be.null);",
                   "pm.test(\"sem senha na resposta\", () => pm.expect(pm.response.json()).to.not.have.property(\"senha\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "T26 - Cadastro sem permissao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{gerenteToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Intruso\",\n  \"email\": \"intruso@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"perfil\": \"ADMIN\",\n  \"consentimentoLgpd\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Cenário negativo: GERENTE não pode criar usuários."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"erro padronizado\", () => { const j = pm.response.json(); pm.expect(j.error).to.eql(\"SEM_PERMISSAO\"); pm.expect(j).to.have.property(\"timestamp\"); pm.expect(j).to.have.property(\"path\"); pm.expect(j).to.have.property(\"requestId\"); });"
                 ]
               }
             }
@@ -2037,6 +2092,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
               }
             ],
             "url": {
@@ -2050,7 +2109,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Joana Duplicada\",\n  \"email\": \"joana.teste@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"consentimentoLgpd\": true\n}",
+              "raw": "{\n  \"nome\": \"Joana Duplicada\",\n  \"email\": \"joana.teste@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"perfil\": \"CLIENTE\",\n  \"consentimentoLgpd\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2083,6 +2142,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
               }
             ],
             "url": {
@@ -2096,7 +2159,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Sem Consentimento\",\n  \"email\": \"sem.consentimento@exemplo.com\",\n  \"senha\": \"Segura123\"\n}",
+              "raw": "{\n  \"nome\": \"Sem Consentimento\",\n  \"email\": \"sem.consentimento@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"perfil\": \"CLIENTE\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2112,6 +2175,56 @@
                 "exec": [
                   "pm.test(\"status 422\", () => pm.response.to.have.status(422));",
                   "pm.test(\"campo consentimentoLgpd\", () => pm.expect(pm.response.json().details.some(i => i.field === \"consentimentoLgpd\")).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "T27 - Cadastro sem perfil",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Sem Perfil\",\n  \"email\": \"sem.perfil@exemplo.com\",\n  \"senha\": \"Segura123\",\n  \"consentimentoLgpd\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"campo perfil obrigatorio\", () => pm.expect(pm.response.json().details.some(i => i.field === \"perfil\")).to.be.true);"
                 ]
               }
             }

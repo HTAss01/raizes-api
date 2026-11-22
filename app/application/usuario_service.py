@@ -25,10 +25,11 @@ def cadastrar(
     senha: str,
     telefone: str | None,
     consentimento_lgpd: bool,
+    perfil: PerfilUsuario,
     request_id: str | None = None,
     ip: str | None = None,
 ) -> Usuario:
-    """Auto-cadastro público: sempre cria perfil CLIENTE, nunca ADMIN."""
+    """Cadastro de usuário executado por um ADMIN, com perfil explícito."""
 
     email_normalizado = email.strip().lower()
     if _por_email(db, email_normalizado) is not None:
@@ -39,7 +40,7 @@ def cadastrar(
         email=email_normalizado,
         senha_hash=hash_senha(senha),
         telefone=telefone,
-        perfil=PerfilUsuario.CLIENTE,
+        perfil=perfil,
         ativo=True,
         consentimento_lgpd=consentimento_lgpd,
         consentimento_em=agora() if consentimento_lgpd else None,

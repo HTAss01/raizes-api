@@ -101,7 +101,7 @@ Dependência aponta sempre para dentro: `api → application → domain`,
 | Casos de uso + descrição do fluxo crítico | `docs/diagramas/casos-de-uso.md` |
 | Diagrama de classes e máquina de estados | `docs/diagramas/classes.md` |
 | Sequência Pedido → Pagamento → Status | `docs/diagramas/sequencia-pedido-pagamento.md` |
-| Plano de testes (25 cenários) | `docs/PLANO_DE_TESTES.md` |
+| Plano de testes (27 cenários) | `docs/PLANO_DE_TESTES.md` |
 | Coleção Postman | `docs/postman/Raizes-API.postman_collection.json` |
 | Environment Postman | `docs/postman/Raizes-API.postman_environment.json` |
 
@@ -155,6 +155,19 @@ Todos os usuários usam a senha `Senha@123`.
 | COZINHA | cozinha@raizes.com.br |
 | CLIENTE | cliente@raizes.com.br |
 
+### Primeiro acesso (ADMIN)
+
+Como `POST /usuarios` exige um ADMIN, o **primeiro administrador é criado pelo seed** — não existe
+endpoint público que crie contas, justamente para evitar escalada de privilégio. O fluxo inicial é:
+
+1. `POST /auth/login` com `{ "email": "admin@raizes.com.br", "senha": "Senha@123" }`;
+2. copiar o `accessToken` e aplicar em **Authorize** no Swagger;
+3. a partir daí, cadastrar os demais usuários com `POST /usuarios` e o campo `perfil`
+   (`GERENTE`, `ATENDENTE`, `COZINHA`, `CLIENTE` ou outro `ADMIN`).
+
+Se o banco for recriado, o admin volta com o seed. Para trocar a senha inicial, altere
+`SENHA_PADRAO` em `app/infrastructure/db/seed.py` antes de rodar o seed.
+
 ### PostgreSQL (opcional)
 
 Basta trocar uma linha no `.env` — nenhum código muda:
@@ -188,7 +201,9 @@ Detalhes que evitam erro comum:
 - não cole o `refreshToken` no Authorize — ele só é aceito em `POST /auth/refresh`;
 - não digite `Bearer` junto do token; o Swagger acrescenta o prefixo;
 - o token expira em 60 minutos; depois disso, refaça o login;
-- para testar outro perfil, faça login com outro usuário e repita o passo 3.
+- para testar outro perfil, faça login com outro usuário e repita o passo 3;
+- para conferir **com qual perfil você está logado**, use `GET /auth/me`: o campo `perfil` da
+  resposta é a sua sessão real — o exemplo de schema mostrado pelo Swagger não representa você.
 
 ### Endpoints por recurso
 
@@ -197,7 +212,7 @@ Detalhes que evitam erro comum:
 | Autenticação | `POST /auth/login` | público |
 | | `POST /auth/refresh`, `POST /auth/logout` | público (exige refresh token) |
 | | `GET /auth/me` | JWT |
-| Usuários | `POST /usuarios` | público (autocadastro — sempre perfil CLIENTE) |
+| Usuários | `POST /usuarios` | **ADMIN** (o `perfil` é obrigatório no corpo) |
 | | `GET /usuarios/me`, `PATCH /usuarios/me` | JWT (próprio titular) |
 | | `GET /usuarios/me/dados` (portabilidade) | JWT (próprio titular) |
 | | `DELETE /usuarios/me` (anonimização) | JWT (próprio titular) |
@@ -220,6 +235,33 @@ Detalhes que evitam erro comum:
 | Fidelidade | `GET /fidelidade/saldo`, `GET /fidelidade/extrato`, `GET /fidelidade/regras` | JWT |
 | Auditoria | `GET /auditoria` (`?acao=`, `?entidade=`, `?entidadeId=`) | ADMIN |
 | Saúde | `GET /health` | público |
+
+### Cadastro de usuários e perfis
+
+O `POST /usuarios` é **protegido**: exige token de um usuário com perfil **ADMIN** e o campo
+`perfil` é **obrigatório** no corpo.
+
+| Quem chama | `perfil` no corpo | Resultado |
+|---|---|---|
+| sem token | qualquer | `401 NAO_AUTENTICADO` |
+| ADMIN autenticado | `ADMIN`, `GERENTE`, `ATENDENTE`, `COZINHA` ou `CLIENTE` | `201` com o perfil informado |
+| GERENTE, ATENDENTE, COZINHA ou CLIENTE | qualquer | `403 SEM_PERMISSAO` |
+| ADMIN autenticado | ausente | `422 DADOS_INVALIDOS` (`field: perfil`) |
+
+Exemplo de criação de gerente (login como `admin@raizes.com.br`, token no **Authorize**):
+
+```json
+{
+  "nome": "João Gerente",
+  "email": "joao.gerente@raizes.com.br",
+  "senha": "Senha@123",
+  "perfil": "GERENTE",
+  "consentimentoLgpd": false
+}
+```
+
+Perfis aceitos: `ADMIN`, `GERENTE`, `ATENDENTE`, `COZINHA`, `CLIENTE`. A criação nunca é anônima:
+um endpoint público jamais pode aceitar que o próprio usuário se declare administrador.
 
 ### Padrão de erro (igual em toda a API)
 
@@ -288,9 +330,9 @@ seed existem para que a regra acima seja implementada sem alterar o DER.
 
 ## Testes
 
-- **Coleção:** `docs/postman/Raizes-API.postman_collection.json` (10 pastas, 59 requisições)
+- **Coleção:** `docs/postman/Raizes-API.postman_collection.json` (10 pastas, 61 requisições)
 - **Environment:** `docs/postman/Raizes-API.postman_environment.json`
-- **Plano com os 25 cenários:** `docs/PLANO_DE_TESTES.md`
+- **Plano com os 27 cenários:** `docs/PLANO_DE_TESTES.md`
 - **Roteiro passo a passo (manual e automatizado):** `docs/ROTEIRO_DE_VALIDACAO.md`
 
 ### Preparar o banco
@@ -310,7 +352,7 @@ antes dos dois comandos.
 1. Suba a API em `http://localhost:8000` com banco migrado e seed aplicado.
 2. Importe coleção + environment no Postman e selecione o environment `Raizes API - Local`.
 3. **Collection Runner** → Run, com as 10 pastas marcadas.
-4. Resultado esperado: **59 requisições, 0 falhas**.
+4. Resultado esperado: **61 requisições, 0 falhas**.
 
 Ordem das pastas (é a dependência entre elas):
 

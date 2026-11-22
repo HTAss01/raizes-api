@@ -49,6 +49,7 @@ Executar pastas fora de ordem quebra as variáveis encadeadas (ex.: `pedidoId`).
 | T03 | Acesso sem token | `00 / T03 - Sem token` | — | sem `Authorization` | `401` + `NAO_AUTENTICADO` |
 | T04 | Perfil sem permissão | `01 / T04 - Estoque sem permissão` | token de CLIENTE | `GET /unidades/{id}/estoque` | `403` + `SEM_PERMISSAO` |
 | T23 | Cliente listando usuários | `05 / T23 - Cliente listando usuários` | token de CLIENTE | `GET /usuarios` | `403` + `SEM_PERMISSAO` |
+| T26 | Cadastro de usuário por GERENTE | `05 / T26 - Cadastro sem permissão` | token de GERENTE | `POST /usuarios` com `perfil: ADMIN` | `403` + `SEM_PERMISSAO` |
 
 ### 3.2 Validação de dados
 
@@ -57,7 +58,8 @@ Executar pastas fora de ordem quebra as variáveis encadeadas (ex.: `pedidoId`).
 | T08 | Campo obrigatório ausente | `03 / T08 - Pedido sem canalPedido` | usuário autenticado | pedido sem `canalPedido` | `422` + `DADOS_INVALIDOS`, `details[].field = canalPedido` |
 | T09 | Valor inválido em enum | `03 / T09 - Canal inválido` | idem | `canalPedido: "DRIVE"` | `422` + `DADOS_INVALIDOS` listando opções válidas |
 | T16 | Header obrigatório ausente | `04 / T16 - Pagamento sem Idempotency-Key` | pedido existente | sem header | `422`, `details[].field = Idempotency-Key` |
-| T20 | Consentimento ausente | `05 / T20 - Consentimento ausente` | — | cadastro sem `consentimentoLgpd` | `422`, `details[].field = consentimentoLgpd` |
+| T20 | Consentimento ausente | `05 / T20 - Consentimento ausente` | token de ADMIN | cadastro sem `consentimentoLgpd` | `422`, `details[].field = consentimentoLgpd` |
+| T27 | Perfil ausente no cadastro | `05 / T27 - Cadastro sem perfil` | token de ADMIN | cadastro sem `perfil` | `422`, `details[].field = perfil` |
 
 ### 3.3 Regras de negócio do fluxo principal
 
@@ -84,8 +86,8 @@ Executar pastas fora de ordem quebra as variáveis encadeadas (ex.: `pedidoId`).
 | ID | Cenário | Requisição na coleção | Pré-condição | Entrada | Saída esperada |
 |---|---|---|---|---|---|
 | T17 | Resgate sem saldo | `06 / T17 - Resgate sem saldo` | cliente sem pontos | `resgatarPontos: true` | `422` + `REGRA_DE_NEGOCIO_VIOLADA` |
-| T18 | Cadastro com consentimento | `05 / T18 - Cadastro de cliente` | banco recém-semeado | `{..., consentimentoLgpd: true}` | `201`, `perfil: CLIENTE`, `consentimentoEm` preenchido, sem senha na resposta |
-| T19 | E-mail duplicado | `05 / T19 - E-mail duplicado` | T18 executado | mesmo e-mail | `409` + `EMAIL_JA_CADASTRADO` |
+| T18 | Cadastro de cliente pelo ADMIN | `05 / T18 - Cadastro de cliente (ADMIN)` | token de ADMIN, banco recém-semeado | `{..., perfil: CLIENTE, consentimentoLgpd: true}` | `201`, `perfil: CLIENTE`, `consentimentoEm` preenchido, sem senha na resposta |
+| T19 | E-mail duplicado | `05 / T19 - E-mail duplicado` | T18 executado, token de ADMIN | mesmo e-mail | `409` + `EMAIL_JA_CADASTRADO` |
 | T21 | Portabilidade | `05 / T21 - Exportar dados pessoais` | token válido | `GET /usuarios/me/dados` | `200` com `usuario`, `pedidos`, `pontos` |
 | T22 | Auditoria de ação sensível | `07 / T22 - Auditoria de pedido criado` | pedido criado (T07) | `?acao=PEDIDO_CRIADO` com token ADMIN | `200` com registro contendo `requestId` |
 | T24 | Anonimização | `08 / T24 - Anonimização do titular` | cliente cadastrado em T18 | `DELETE /usuarios/me` | `204`; pedidos preservados, dados pessoais substituídos |
@@ -97,8 +99,8 @@ Executar pastas fora de ordem quebra as variáveis encadeadas (ex.: `pedidoId`).
 |---|---|---|
 | Login com token válido | T01 | ✅ |
 | Acesso sem token (401) | T03 | ✅ |
-| Perfil sem permissão (403) | T04, T06, T23 | ✅ |
-| Campo obrigatório ausente (422) | T08, T16, T20 | ✅ |
+| Perfil sem permissão (403) | T04, T06, T23, T26 | ✅ |
+| Campo obrigatório ausente (422) | T08, T16, T20, T27 | ✅ |
 | Tipo/formato inválido (422) | T09 | ✅ |
 | Pedido criado (201) | T07 | ✅ |
 | Recurso inexistente (404) | T05, T07b | ✅ |
@@ -107,8 +109,8 @@ Executar pastas fora de ordem quebra as variáveis encadeadas (ex.: `pedidoId`).
 | Pagamento recusado + status | T15 | ✅ |
 | Log/auditoria de ação sensível | T22 | ✅ implementado (consultável via `GET /auditoria`, ADMIN) |
 
-**Totais:** 25 cenários numerados — **8 positivos** (2xx de fluxo esperado) e **17 negativos**
-(erros e restrições). A coleção possui 59 requisições no total, incluindo passos de apoio
+**Totais:** 27 cenários numerados — **8 positivos** (2xx de fluxo esperado) e **19 negativos**
+(erros e restrições). A coleção possui 61 requisições no total, incluindo passos de apoio
 (logins por perfil, refresh, listagens, CRUD de produto, movimentação de estoque, dados do
 titular e health check).
 

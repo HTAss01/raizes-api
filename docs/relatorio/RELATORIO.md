@@ -25,8 +25,8 @@ Foram implementadas 34 operações de API em 14 tabelas, com padrão único de e
 as listagens e mensagens de validação em português. A LGPD é tratada de forma técnica: consentimento
 registrado com data, minimização nas respostas, hash bcrypt de senha, log append-only de ações
 sensíveis, portabilidade dos dados do titular e anonimização na exclusão da conta. A validação é
-reproduzível por meio de uma coleção Postman com 59 requisições e 25 cenários documentados
-(8 positivos e 17 negativos), executada integralmente com sucesso em banco recém-semeado.
+reproduzível por meio de uma coleção Postman com 61 requisições e 27 cenários documentados
+(8 positivos e 19 negativos), executada integralmente com sucesso em banco recém-semeado.
 
 **Palavras-chave:** API REST; FastAPI; multicanalidade; estoque por unidade; pagamento simulado; LGPD.
 
@@ -85,7 +85,7 @@ modelo:
 
 | ID | Requisito funcional | Situação |
 |---|---|---|
-| RF01 | Cadastro de usuário com e-mail único e consentimento LGPD | Implementado |
+| RF01 | Cadastro de usuário com e-mail único e consentimento LGPD (restrito a ADMIN) | Implementado |
 | RF02 | Autenticação por e-mail e senha com emissão de token JWT e refresh rotativo | Implementado |
 | RF03 | Autorização por perfis: ADMIN, GERENTE, ATENDENTE, COZINHA, CLIENTE | Implementado |
 | RF04 | Cadastro e consulta de unidades da rede | Implementado |
@@ -278,7 +278,7 @@ de mudar status.
 | Recurso | Operações | Autenticação |
 |---|---|---|
 | `/auth` | login, refresh, logout, me | público / JWT |
-| `/usuarios` | cadastro, me, me/dados, me (PATCH/DELETE), listagem | público / JWT / gestão |
+| `/usuarios` | cadastro, me, me/dados, me (PATCH/DELETE), listagem | JWT / ADMIN no cadastro |
 | `/unidades` | listar, detalhar, criar, cardápio, estoque, movimentação | JWT / gestão |
 | `/produtos` | listar, detalhar, criar, atualizar, desativar | JWT / gestão |
 | `/pedidos` | criar, listar com filtros, detalhar, atualizar status, pagamentos | JWT |
@@ -509,7 +509,7 @@ BearerAuth e contratos gerados do código.*
 
 ## 6.3 Coleção de testes
 
-`docs/postman/Raizes-API.postman_collection.json` — 10 pastas, 59 requisições, com asserções
+`docs/postman/Raizes-API.postman_collection.json` — 10 pastas, 61 requisições, com asserções
 (`pm.test`) e encadeamento de variáveis (`accessToken`, `pedidoId`, `pagamentoId`,
 `idempotencyKey`). O environment `docs/postman/Raizes-API.postman_environment.json` define a URL
 base.
@@ -531,19 +531,19 @@ reconstruir a ordem de raciocínio do projeto, e não apenas o resultado final.
 
 # 7 PLANO DE TESTES
 
-O plano completo está em `docs/PLANO_DE_TESTES.md`, com 25 cenários identificados (T01 a T25) e
+O plano completo está em `docs/PLANO_DE_TESTES.md`, com 27 cenários identificados (T01 a T27) e
 respectiva evidência no nome da requisição da coleção. Resumo por categoria:
 
 | Categoria | Cenários | Exemplos |
 |---|---|---|
-| Autenticação e autorização | 5 | login válido, sem token (401), perfil sem permissão (403) |
-| Validação de dados | 4 | campo obrigatório, enum inválido, header ausente, consentimento ausente |
+| Autenticação e autorização | 6 | login válido, sem token (401), perfil sem permissão (403), cadastro por GERENTE (403) |
+| Validação de dados | 5 | campo obrigatório, enum inválido, header ausente, consentimento e perfil ausentes |
 | Regras de negócio | 7 | pedido criado (201), estoque insuficiente (409), transição inválida (409) |
 | Pagamento mock | 3 | aprovado, recusado, replay idempotente |
 | Fidelidade, LGPD e auditoria | 6 | resgate sem saldo, cadastro, duplicidade, portabilidade, anonimização, auditoria |
 
 **Cobertura mínima exigida pelo roteiro:** login com token (T01); acesso sem token (T03); perfil sem
-permissão (T04, T06, T23); campo obrigatório ausente (T08, T16, T20); formato inválido (T09); pedido
+permissão (T04, T06, T23, T26); campo obrigatório ausente (T08, T16, T20, T27); formato inválido (T09); pedido
 criado (T07); recurso inexistente (T05); estoque insuficiente (T10); pagamento aprovado com mudança
 de status (T13); pagamento recusado (T15); log de ação sensível (T22).
 
@@ -562,9 +562,9 @@ populado pelo seed:
 |---|---|
 | Tabelas de domínio | 14 (+ `alembic_version`) |
 | Operações de API publicadas | 34 |
-| Coleção Postman | 59 requisições em 10 pastas |
-| Execução completa da coleção | 59/59 com status esperado, zero falha |
-| Cenários documentados | 25 (8 positivos, 17 negativos) |
+| Coleção Postman | 61 requisições em 10 pastas |
+| Execução completa da coleção | 61/61 com status esperado, zero falha |
+| Cenários documentados | 27 (8 positivos, 19 negativos) |
 | Pontos de auditoria gerados na execução | 20 tipos de ação |
 | Migrations | 2 |
 
@@ -645,7 +645,7 @@ foram padronizados em um único formato, com `requestId` correlacionável ao log
 Em segurança e LGPD, os controles são operacionais e verificáveis: hash de senha, token de curta
 duração com refresh rotativo, autorização por perfil, minimização das respostas, consentimento com
 data, portabilidade e anonimização preservando obrigações legais, além de auditoria consultável.
-Os testes evidenciam o funcionamento: 59 requisições executadas sem falha, cobrindo positivos e
+Os testes evidenciam o funcionamento: 61 requisições executadas sem falha, cobrindo positivos e
 negativos, incluindo os casos que costumam ser esquecidos — 401, 403, 409 e o replay idempotente.
 
 Como propostas de continuidade, ficam: aplicar as promoções ao total do pedido (regra já
@@ -691,7 +691,7 @@ https://docs.sqlalchemy.org/en/20/. Acesso em: 2026.
 | POST | `/auth/refresh` | público | rotaciona o par de tokens |
 | POST | `/auth/logout` | público | revoga o refresh token |
 | GET | `/auth/me` | JWT | usuário autenticado |
-| POST | `/usuarios` | público | autocadastro de cliente |
+| POST | `/usuarios` | JWT (ADMIN) | cadastro de usuário com `perfil` obrigatório |
 | GET | `/usuarios/me` | JWT | dados do titular |
 | PATCH | `/usuarios/me` | JWT | atualiza nome/telefone |
 | GET | `/usuarios/me/dados` | JWT | portabilidade |
@@ -739,6 +739,11 @@ Todos os usuários usam a senha `Senha@123`.
 Dados de apoio criados pelo seed: 2 unidades (Recife e Caruaru), 8 produtos, cardápio e estoque por
 unidade, 1 campanha promocional e 1 pedido de exemplo já pago. Na unidade de Caruaru, o Acarajé é
 deixado indisponível e com estoque 1, para exercitar os cenários de indisponibilidade e de conflito.
+
+O **primeiro ADMIN** é criado pelo seed. Como `POST /usuarios` exige autenticação de administrador,
+não existe endpoint público de cadastro — decisão deliberada para impedir escalada de privilégio.
+A partir desse administrador inicial, os demais usuários da rede são cadastrados pela API,
+informando o perfil desejado.
 
 <div class="page-break"></div>
 
