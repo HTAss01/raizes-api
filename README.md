@@ -161,7 +161,9 @@ Como `POST /usuarios` exige um ADMIN, o **primeiro administrador é criado pelo 
 endpoint público que crie contas, justamente para evitar escalada de privilégio. O fluxo inicial é:
 
 1. `POST /auth/login` com `{ "email": "admin@raizes.com.br", "senha": "Senha@123" }`;
-2. copiar o `accessToken` e aplicar em **Authorize** no Swagger;
+2. copiar o `accessToken` e aplicar em **Authorize** no Swagger (o botão se encontra ao topo da página no canto direito inferior do cabeçalho);
+<img width="1298" height="302" alt="image" src="https://github.com/user-attachments/assets/f91f543d-d3d4-4ec5-92e2-53db9a0a6f2d" />
+
 3. a partir daí, cadastrar os demais usuários com `POST /usuarios` e o campo `perfil`
    (`GERENTE`, `ATENDENTE`, `COZINHA`, `CLIENTE` ou outro `ADMIN`).
 
