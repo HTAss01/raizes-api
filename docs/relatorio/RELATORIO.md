@@ -203,6 +203,10 @@ RN5 resgate exige consentimento e múltiplos de 100 pontos.
 *Figura 3.3 — Apoio operacional e governança: movimentações de estoque, fidelidade, promoções,
 histórico de status, auditoria e refresh tokens.*
 
+Os dois recortes acima constituem o **modelo entidade-relacionamento (MER)**: entidades, atributos,
+relacionamentos e cardinalidades. O **modelo lógico** correspondente — com tipo de dado,
+nulabilidade e chaves de cada coluna — está no **Apêndice E (dicionário de dados)**.
+
 O modelo tem **14 tabelas**. As decisões estruturais mais relevantes:
 
 | Entidade | Papel | Decisão |
@@ -591,7 +595,7 @@ apresentação de trabalhos acadêmicos e a NBR 6023 para referências:
 | Papel e margens | A4; margens de 3 cm (superior e esquerda) e 2 cm (inferior e direita) |
 | Fonte | Times New Roman, corpo 12; citações longas e notas em 10; legendas em 10 |
 | Espaçamento | 1,5 no corpo do texto; simples nas referências, separadas por linha em branco |
-| Paginação | algarismos arábicos no rodapé, alinhados à direita, contados a partir da folha de rosto e exibidos a partir da introdução |
+| Paginação | algarismos arábicos no rodapé, alinhados à direita; contagem iniciada na folha de rosto, com número exibido a partir da introdução (NBR 14724) |
 | Estrutura | capa, folha de rosto, resumo, sumário, seções numeradas, referências e apêndices |
 | Sumário | títulos numerados com indicação das páginas correspondentes |
 | Ilustrações | figuras de diagramas com legenda e referência no texto |
@@ -604,6 +608,18 @@ Mermaid. Todos os links constam no README do repositório, conforme exigido no i
 O texto foi redigido com postura profissional: cada decisão técnica é justificada, os limites da
 versão atual estão declarados de forma explícita e os números apresentados foram medidos em
 execução real da API, não estimados.
+
+## 9.1 Declaração de uso de ferramentas de inteligência artificial
+
+Durante o desenvolvimento deste trabalho, ferramentas de inteligência artificial foram utilizadas
+exclusivamente como apoio, em duas frentes: no esclarecimento de dúvidas técnicas de implementação
+e de configuração do ambiente, e na revisão da redação e da organização da documentação.
+
+O levantamento e a priorização de requisitos, as decisões de modelagem, a implementação das regras
+de negócio, a execução e a validação dos testes e a conferência dos resultados apresentados foram
+realizados pela autora, que assume integral responsabilidade pelo conteúdo do trabalho. Nenhum dado
+pessoal de terceiros foi submetido a essas ferramentas, e todo o código e os artefatos entregues
+foram revisados antes da submissão.
 
 <div class="page-break"></div>
 
