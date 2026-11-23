@@ -3,6 +3,8 @@
 > API REST multicanal para a rede de franquias Raízes do Nordeste: pedidos, estoque por unidade, fidelização e pagamento desacoplado (mock).
 
 Atividade Prática — **Projeto Multidisciplinar (Eletiva IV)** — Trilha **Back-End**.
+**Repositório:** https://github.com/HTAss01/raizes-api
+**Relatório (PDF):** `docs/relatorio/4992316_Projeto_Back_End.pdf`
 
 ---
 
