@@ -4,9 +4,6 @@
 
 Atividade Prática — **Projeto Multidisciplinar (Eletiva IV)** — Trilha **Back-End**.
 
-**Repositório:** https://github.com/HTAss01/raizes-api
-**Relatório (PDF):** `docs/relatorio/4992316_Projeto_Back_End.pdf`
-
 ---
 
 ## Sobre o projeto
